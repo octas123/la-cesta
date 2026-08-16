@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>La Cesta</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f6b3a">
+<style>
+  :root{
+    --verde:#2f6b3a;
+    --verde-osc:#20492a;
+    --fondo:#f6f5f0;
+    --tarjeta:#ffffff;
+    --texto:#1c1c1c;
+    --texto-sec:#6b6b6b;
+    --borde:#e2e0d8;
+    --error:#b3261e;
+    --ok:#2f6b3a;
+    --radio:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--fondo);
+    color:var(--texto);
+    padding-bottom:72px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  header.app-bar{
+    background:var(--verde);
+    color:#fff;
+    padding:16px 20px;
+    font-size:1.25rem;
+    font-weight:700;
+    position:sticky;
+    top:0;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  header.app-bar .estado{
+    width:10px;height:10px;border-radius:50%;
+    background:#ffffff55;
+    flex-shrink:0;
+  }
+  header.app-bar .estado.ok{background:#8ee29b;}
+  header.app-bar .estado.error{background:#ff9b8e;}
+  header.app-bar .estado.syncing{background:#ffe08e;animation:pulso 1s infinite;}
+  @keyframes pulso{50%{opacity:.4;}}
+
+  main{padding:16px;max-width:640px;margin:0 auto;}
+
+  nav.tabs{
+    position:fixed;
+    bottom:0;left:0;right:0;
+    display:flex;
+    background:var(--tarjeta);
+    border-top:1px solid var(--borde);
+    padding-bottom:env(safe-area-inset-bottom);
+    z-index:10;
+  }
+  nav.tabs button{
+    flex:1;
+    border:none;
+    background:none;
+    padding:12px 0 10px;
+    font-size:.9rem;
+    color:var(--texto-sec);
+    cursor:pointer;
+  }
+  nav.tabs button.activa{
+    color:var(--verde);
+    font-weight:700;
+  }
+
+  section.pantalla{display:none;}
+  section.pantalla.activa{display:block;}
+
+  .tarjeta{
+    background:var(--tarjeta);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    padding:16px;
+    margin-bottom:16px;
+  }
+  .tarjeta h2{
+    margin:0 0 12px;
+    font-size:1rem;
+    color:var(--verde-osc);
+  }
+  label{
+    display:block;
+    font-size:.85rem;
+    color:var(--texto-sec);
+    margin:10px 0 4px;
+  }
+  input[type=text],input[type=email],input[type=password],input[type=url]{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--borde);
+    border-radius:8px;
+    font-size:1rem;
+    background:#fff;
+    color:var(--texto);
+  }
+  button.boton{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:8px;
+    background:var(--verde);
+    color:#fff;
+    font-size:1rem;
+    font-weight:600;
+    margin-top:14px;
+    cursor:pointer;
+  }
+  button.boton:active{background:var(--verde-osc);}
+  button.boton.secundario{
+    background:none;
+    color:var(--verde);
+    border:1px solid var(--verde);
+  }
+  button.boton:disabled{opacity:.5;cursor:default;}
+
+  .mensaje{
+    margin-top:10px;
+    font-size:.85rem;
+    border-radius:8px;
+    padding:8px 10px;
+  }
+  .mensaje.error{background:#fbeceb;color:var(--error);}
+  .mensaje.ok{background:#eaf3ec;color:var(--ok);}
+
+  .fila-sesion{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .fila-sesion .correo{font-size:.95rem;word-break:break-all;}
+
+  table.resumen{width:100%;border-collapse:collapse;font-size:.85rem;}
+  table.resumen td{padding:6px 4px;border-bottom:1px solid var(--borde);}
+  table.resumen td:last-child{text-align:right;color:var(--texto-sec);}
+
+  .vacio{
+    text-align:center;
+    color:var(--texto-sec);
+    padding:60px 20px;
+  }
+  .vacio .icono{font-size:2.5rem;margin-bottom:8px;}
+</style>
+</head>
+<body>
+
+<header class="app-bar">
+  <span>La Cesta</span>
+  <span id="estado-punto" class="estado" title="Estado de sincronización"></span>
+</header>
+
+<main>
+  <section id="pantalla-recetas" class="pantalla activa">
+    <div class="vacio">
+      <div class="icono">🍲</div>
+      <p>No hay recetas todavía.</p>
+      <p>Se añadirán en la siguiente fase.</p>
+    </div>
+  </section>
+
+  <section id="pantalla-ajustes" class="pantalla">
+    <div class="tarjeta">
+      <h2>Conexión con Supabase</h2>
+      <label for="in-url">URL del proyecto</label>
+      <input id="in-url" type="url" placeholder="https://xxxxx.supabase.co" autocapitalize="off" autocorrect="off">
+      <label for="in-key">Clave publicable (apikey)</label>
+      <input id="in-key" type="text" placeholder="sb_publishable_..." autocapitalize="off" autocorrect="off">
+      <button class="boton" id="btn-guardar-conexion">Guardar conexión</button>
+      <div id="msg-conexion"></div>
+    </div>
+
+    <div class="tarjeta" id="tarjeta-sesion">
+      <h2>Sesión</h2>
+      <div id="sesion-sin-login">
+        <label for="in-email">Correo</label>
+        <input id="in-email" type="email" autocapitalize="off" autocorrect="off">
+        <label for="in-pass">Contraseña</label>
+        <input id="in-pass" type="password">
+        <button class="boton" id="btn-entrar">Entrar</button>
+        <div id="msg-sesion"></div>
+      </div>
+      <div id="sesion-con-login" style="display:none;">
+        <div class="fila-sesion">
+          <span class="correo" id="txt-correo-actual"></span>
+          <button class="boton secundario" id="btn-salir" style="width:auto;margin-top:0;padding:8px 16px;">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Sincronización</h2>
+      <button class="boton" id="btn-sync">Sincronizar ahora</button>
+      <div id="msg-sync"></div>
+      <table class="resumen" id="tabla-resumen"></table>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button data-pantalla="recetas" class="activa">Recetas</button>
+  <button data-pantalla="ajustes">Ajustes</button>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ------------------------------------------------------------
+  // Configuración de tablas sincronizables
+  // ------------------------------------------------------------
+  var TABLAS = [
+    { nombre: "secciones",    pk: "id" },
+    { nombre: "ingredientes", pk: "id" },
+    { nombre: "recetas",      pk: "id" },
+    { nombre: "menu",         pk: "id" },
+    { nombre: "lista",        pk: "ing_id" }
+  ];
+
+  var K_SETTINGS = "lc_settings";
+  var K_SESION = "lc_sesion";
+  function kTabla(nombre){ return "lc_tabla_" + nombre; }
+  function kLastSync(nombre){ return "lc_lastsync_" + nombre; }
+
+  // ------------------------------------------------------------
+  // Almacén local
+  // ------------------------------------------------------------
+  function leerJSON(clave, porDefecto){
+    try{
+      var v = localStorage.getItem(clave);
+      return v ? JSON.parse(v) : porDefecto;
+    }catch(e){
+      return porDefecto;
+    }
+  }
+  function escribirJSON(clave, valor){
+    localStorage.setItem(clave, JSON.stringify(valor));
+  }
+
+  function getSettings(){ return leerJSON(K_SETTINGS, { url:"", key:"" }); }
+  function setSettings(s){ escribirJSON(K_SETTINGS, s); }
+  function getSesion(){ return leerJSON(K_SESION, null); }
+  function setSesion(s){ escribirJSON(K_SESION, s); }
+  function getTabla(nombre){ return leerJSON(kTabla(nombre), []); }
+  function setTabla(nombre, filas){ escribirJSON(kTabla(nombre), filas); }
+  function getLastSync(nombre){ return localStorage.getItem(kLastSync(nombre)) || null; }
+  function setLastSync(nombre, iso){ localStorage.setItem(kLastSync(nombre), iso); }
+
+  // ------------------------------------------------------------
+  // Utilidades
+  // ------------------------------------------------------------
+  function limpiarUrl(bruta){
+    var u = (bruta || "").trim();
+    u = u.replace(/\/+$/,"");
+    u = u.replace(/\/rest\/v1$/,"").replace(/\/auth\/v1$/,"");
+    return u;
+  }
+
+  function elem(id){ return document.getElementById(id); }
+
+  function mostrarMensaje(id, texto, tipo){
+    var box = elem(id);
+    if(!texto){ box.innerHTML = ""; return; }
+    box.innerHTML = '<div class="mensaje ' + tipo + '">' + texto + '</div>';
+  }
+
+  // ------------------------------------------------------------
+  // Autenticación (Supabase Auth)
+  // ------------------------------------------------------------
+  function sesionValida(){
+    var s = getSesion();
+    return !!(s && s.access_token && s.refresh_token);
+  }
+
+  function tokenCaducado(margenMs){
+    var s = getSesion();
+    if(!s || !s.expires_at) return true;
+    return Date.now() > (s.expires_at - (margenMs || 0));
+  }
+
+  function login(email, password){
+    var cfg = getSettings();
+    var url = limpiarUrl(cfg.url);
+    return fetch(url + "/auth/v1/token?grant_type=password", {
+      method: "POST",
+      headers: {
+        "apikey": cfg.key,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email: email, password: password })
+    }).then(function(res){
+      return res.json().then(function(data){
+        if(!res.ok){
+          throw new Error(data.error_description || data.msg || "Credenciales incorrectas.");
+        }
+        guardarSesionDesdeRespuesta(data, email);
+        return data;
+      });
+    });
+  }
+
+  function refrescarToken(){
+    var cfg = getSettings();
+    var s = getSesion();
+    if(!s || !s.refresh_token) return Promise.reject(new Error("Sin sesión."));
+    var url = limpiarUrl(cfg.url);
+    return fetch(url + "/auth/v1/token?grant_type=refresh_token", {
+      method: "POST",
+      headers: {
+        "apikey": cfg.key,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ refresh_token: s.refresh_token })
+    }).then(function(res){
+      return res.json().then(function(data){
+        if(!res.ok){
+          throw new Error(data.error_description || data.msg || "No se pudo renovar la sesión.");
+        }
+        guardarSesionDesdeRespuesta(data, s.email);
+        return data;
+      });
+    });
+  }
+
+  function guardarSesionDesdeRespuesta(data, email){
+    setSesion({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: Date.now() + (data.expires_in || 3600) * 1000,
+      email: email
+    });
+  }
+
+  function logout(){
+    var cfg = getSettings();
+    var s = getSesion();
+    var url = limpiarUrl(cfg.url);
+    var limpiar = function(){ setSesion(null); };
+    if(!s) return Promise.resolve();
+    return fetch(url + "/auth/v1/logout", {
+      method: "POST",
+      headers: {
+        "apikey": cfg.key,
+        "Authorization": "Bearer " + s.access_token
+      }
+    }).catch(function(){ /* si falla, igualmente cerramos localmente */ })
+      .then(limpiar);
+  }
+
+  function asegurarSesionUtilizable(){
+    if(!sesionValida()) return Promise.reject(new Error("Sin sesión."));
+    if(!tokenCaducado(60000)) return Promise.resolve();
+    return refrescarToken();
+  }
+
+  // ------------------------------------------------------------
+  // Sincronización bidireccional, fila a fila
+  // ------------------------------------------------------------
+  // La lógica de abajo es pura (sin DOM, sin red, sin reloj propio)
+  // a propósito: pruebas-sync.js la extrae de este bloque y la
+  // ejecuta con Node. No añadir aquí llamadas a fetch/localStorage.
+  //
+  // === INICIO LÓGICA PURA (ver pruebas-sync.js) ===
+
+  // Colchón de seguridad para la deriva de reloj entre los dos móviles
+  // (spec sección 6). No arregla una fila subida horas tarde, pero
+  // cubre el margen de segundos/minutos entre dispositivos.
+  var MARGEN_SYNC_MS = 5 * 60 * 1000;
+
+  function aplicarMargen(marca, margenMs){
+    if(!marca) return null;
+    return new Date(new Date(marca).getTime() - margenMs).toISOString();
+  }
+
+  // La marca de última sincronización debe ser el updated_at más alto
+  // recibido del servidor, nunca la hora del reloj local: ese reloj
+  // no tiene relación con cuándo se escribió la fila, y una fila
+  // editada sin cobertura y subida más tarde lleva un updated_at
+  // anterior al momento de la sincronización que la subió.
+  function calcularMarca(remotas, marcaActual){
+    if(!remotas || remotas.length === 0) return marcaActual || null;
+    var top = remotas[0].updated_at;
+    remotas.forEach(function(fila){
+      if(new Date(fila.updated_at) > new Date(top)) top = fila.updated_at;
+    });
+    if(!marcaActual || new Date(top) > new Date(marcaActual)) return top;
+    return marcaActual;
+  }
+
+  function fusionarFilas(pk, locales, remotas){
+    var porClave = {};
+    locales.forEach(function(fila){ porClave[fila[pk]] = fila; });
+
+    remotas.forEach(function(remota){
+      var clave = remota[pk];
+      var local = porClave[clave];
+      if(!local){
+        porClave[clave] = remota;
+        return;
+      }
+      // Gana la fila con updated_at más reciente. Si la local tiene
+      // cambios sin subir (_dirty) y es más nueva, se conserva para
+      // que la bajada no la pise antes de que le toque subir.
+      var localMasNueva = new Date(local.updated_at) > new Date(remota.updated_at);
+      if(local._dirty && localMasNueva){
+        return;
+      }
+      porClave[clave] = remota;
+    });
+
+    return Object.keys(porClave).map(function(k){ return porClave[k]; });
+  }
+
+  // Decide, fila a fila, si un cambio local pendiente se sube o se
+  // descarta. Un upsert con merge-duplicates no basta: pisaría sin
+  // avisar una fila más nueva que ya subió el otro dispositivo. Se
+  // sube solo si el local es estrictamente más reciente que el
+  // remoto; en empate o si el remoto gana, se descarta el cambio
+  // local y se conserva el remoto.
+  function decidirSubida(pk, pendientes, remotasPorClave){
+    var aSubir = [];
+    var resueltosConRemoto = {};
+    pendientes.forEach(function(local){
+      var clave = local[pk];
+      var remota = remotasPorClave[clave];
+      if(remota && new Date(remota.updated_at) >= new Date(local.updated_at)){
+        resueltosConRemoto[clave] = remota;
+      }else{
+        aSubir.push(local);
+      }
+    });
+    return { aSubir: aSubir, resueltosConRemoto: resueltosConRemoto };
+  }
+
+  // === FIN LÓGICA PURA (ver pruebas-sync.js) ===
+
+  var sincronizando = false;
+
+  function cabecerasDatos(){
+    var cfg = getSettings();
+    var s = getSesion();
+    return {
+      "apikey": cfg.key,
+      "Authorization": "Bearer " + s.access_token,
+      "Content-Type": "application/json"
+    };
+  }
+
+  function bajarCambios(tablaCfg){
+    var cfg = getSettings();
+    var url = limpiarUrl(cfg.url);
+    var marca = getLastSync(tablaCfg.nombre);
+    var marcaConMargen = aplicarMargen(marca, MARGEN_SYNC_MS);
+    var query = "select=*&order=updated_at.asc";
+    if(marcaConMargen){
+      query += "&updated_at=gt." + encodeURIComponent(marcaConMargen);
+    }
+    return fetch(url + "/rest/v1/" + tablaCfg.nombre + "?" + query, {
+      headers: cabecerasDatos()
+    }).then(function(res){
+      if(!res.ok){
+        return res.text().then(function(t){
+          throw new Error(tablaCfg.nombre + ": " + res.status + " " + t);
+        });
+      }
+      return res.json();
+    }).then(function(remotas){
+      var actuales = getTabla(tablaCfg.nombre);
+      setTabla(tablaCfg.nombre, fusionarFilas(tablaCfg.pk, actuales, remotas));
+      var nuevaMarca = calcularMarca(remotas, marca);
+      if(nuevaMarca) setLastSync(tablaCfg.nombre, nuevaMarca);
+      return remotas.length;
+    });
+  }
+
+  function comprobarRemotas(tablaCfg, pendientes){
+    var cfg = getSettings();
+    var url = limpiarUrl(cfg.url);
+    var valores = pendientes.map(function(f){
+      return '"' + String(f[tablaCfg.pk]).replace(/"/g, '\\"') + '"';
+    }).join(",");
+    var query = tablaCfg.pk + "=in.(" + valores + ")&select=*";
+    return fetch(url + "/rest/v1/" + tablaCfg.nombre + "?" + query, {
+      headers: cabecerasDatos()
+    }).then(function(res){
+      if(!res.ok){
+        return res.text().then(function(t){
+          throw new Error(tablaCfg.nombre + ": " + res.status + " " + t);
+        });
+      }
+      return res.json();
+    }).then(function(filas){
+      var mapa = {};
+      filas.forEach(function(f){ mapa[f[tablaCfg.pk]] = f; });
+      return mapa;
+    });
+  }
+
+  function enviarFilas(tablaCfg, filas){
+    var cfg = getSettings();
+    var url = limpiarUrl(cfg.url);
+    var cuerpo = filas.map(function(f){
+      var copia = {};
+      Object.keys(f).forEach(function(k){ if(k !== "_dirty") copia[k] = f[k]; });
+      return copia;
+    });
+
+    var headers = cabecerasDatos();
+    headers["Prefer"] = "resolution=merge-duplicates,return=representation";
+
+    return fetch(url + "/rest/v1/" + tablaCfg.nombre, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(cuerpo)
+    }).then(function(res){
+      if(!res.ok){
+        return res.text().then(function(t){
+          throw new Error(tablaCfg.nombre + ": " + res.status + " " + t);
+        });
+      }
+      return res.json();
+    }).then(function(confirmadas){
+      var actuales = getTabla(tablaCfg.nombre);
+      var porClave = {};
+      actuales.forEach(function(f){ porClave[f[tablaCfg.pk]] = f; });
+      confirmadas.forEach(function(f){ porClave[f[tablaCfg.pk]] = f; });
+      setTabla(tablaCfg.nombre, Object.keys(porClave).map(function(k){ return porClave[k]; }));
+      return confirmadas.length;
+    });
+  }
+
+  function subirCambios(tablaCfg){
+    var locales = getTabla(tablaCfg.nombre);
+    var pendientes = locales.filter(function(f){ return f._dirty; });
+    if(pendientes.length === 0) return Promise.resolve(0);
+
+    return comprobarRemotas(tablaCfg, pendientes).then(function(remotasPorClave){
+      var decision = decidirSubida(tablaCfg.pk, pendientes, remotasPorClave);
+
+      if(Object.keys(decision.resueltosConRemoto).length > 0){
+        var actuales = getTabla(tablaCfg.nombre);
+        var porClave = {};
+        actuales.forEach(function(f){ porClave[f[tablaCfg.pk]] = f; });
+        Object.keys(decision.resueltosConRemoto).forEach(function(clave){
+          porClave[clave] = decision.resueltosConRemoto[clave];
+        });
+        setTabla(tablaCfg.nombre, Object.keys(porClave).map(function(k){ return porClave[k]; }));
+      }
+
+      if(decision.aSubir.length === 0) return 0;
+      return enviarFilas(tablaCfg, decision.aSubir);
+    });
+  }
+
+  function sincronizarTabla(tablaCfg){
+    return subirCambios(tablaCfg).then(function(){
+      return bajarCambios(tablaCfg);
+    });
+  }
+
+  function sincronizarTodo(){
+    if(sincronizando) return Promise.resolve();
+    if(!getSettings().url || !getSettings().key){
+      return Promise.resolve();
+    }
+    if(!sesionValida()) return Promise.resolve();
+
+    sincronizando = true;
+    actualizarPuntoEstado("syncing");
+    mostrarMensaje("msg-sync", "", "");
+
+    return asegurarSesionUtilizable()
+      .then(function(){
+        var cadena = Promise.resolve();
+        TABLAS.forEach(function(t){
+          cadena = cadena.then(function(){ return sincronizarTabla(t); });
+        });
+        return cadena;
+      })
+      .then(function(){
+        sincronizando = false;
+        actualizarPuntoEstado("ok");
+        mostrarMensaje("msg-sync", "Sincronizado " + new Date().toLocaleTimeString(), "ok");
+        pintarResumen();
+      })
+      .catch(function(err){
+        sincronizando = false;
+        actualizarPuntoEstado("error");
+        mostrarMensaje("msg-sync", err.message || "Error de sincronización.", "error");
+        pintarResumen();
+      });
+  }
+
+  function actualizarPuntoEstado(estado){
+    var punto = elem("estado-punto");
+    punto.className = "estado" + (estado ? " " + estado : "");
+  }
+
+  // ------------------------------------------------------------
+  // Interfaz — navegación
+  // ------------------------------------------------------------
+  function irAPantalla(nombre){
+    document.querySelectorAll("section.pantalla").forEach(function(s){
+      s.classList.toggle("activa", s.id === "pantalla-" + nombre);
+    });
+    document.querySelectorAll("nav.tabs button").forEach(function(b){
+      b.classList.toggle("activa", b.dataset.pantalla === nombre);
+    });
+  }
+
+  document.querySelectorAll("nav.tabs button").forEach(function(b){
+    b.addEventListener("click", function(){ irAPantalla(b.dataset.pantalla); });
+  });
+
+  // ------------------------------------------------------------
+  // Interfaz — Ajustes: conexión
+  // ------------------------------------------------------------
+  function cargarFormularioConexion(){
+    var cfg = getSettings();
+    elem("in-url").value = cfg.url || "";
+    elem("in-key").value = cfg.key || "";
+  }
+
+  elem("btn-guardar-conexion").addEventListener("click", function(){
+    var url = limpiarUrl(elem("in-url").value);
+    var key = elem("in-key").value.trim();
+    if(!url || !key){
+      mostrarMensaje("msg-conexion", "Rellena la URL y la clave.", "error");
+      return;
+    }
+    setSettings({ url: url, key: key });
+    elem("in-url").value = url;
+    mostrarMensaje("msg-conexion", "Conexión guardada.", "ok");
+  });
+
+  // ------------------------------------------------------------
+  // Interfaz — Ajustes: sesión
+  // ------------------------------------------------------------
+  function pintarSesion(){
+    var s = getSesion();
+    if(s && s.email){
+      elem("sesion-sin-login").style.display = "none";
+      elem("sesion-con-login").style.display = "block";
+      elem("txt-correo-actual").textContent = s.email;
+    }else{
+      elem("sesion-sin-login").style.display = "block";
+      elem("sesion-con-login").style.display = "none";
+    }
+  }
+
+  elem("btn-entrar").addEventListener("click", function(){
+    var cfg = getSettings();
+    if(!cfg.url || !cfg.key){
+      mostrarMensaje("msg-sesion", "Guarda primero la URL y la clave de conexión.", "error");
+      return;
+    }
+    var email = elem("in-email").value.trim();
+    var pass = elem("in-pass").value;
+    if(!email || !pass){
+      mostrarMensaje("msg-sesion", "Rellena correo y contraseña.", "error");
+      return;
+    }
+    var boton = elem("btn-entrar");
+    boton.disabled = true;
+    mostrarMensaje("msg-sesion", "", "");
+    login(email, pass).then(function(){
+      elem("in-pass").value = "";
+      mostrarMensaje("msg-sesion", "", "");
+      pintarSesion();
+      boton.disabled = false;
+      sincronizarTodo();
+    }).catch(function(err){
+      mostrarMensaje("msg-sesion", err.message, "error");
+      boton.disabled = false;
+    });
+  });
+
+  elem("btn-salir").addEventListener("click", function(){
+    logout().then(function(){
+      pintarSesion();
+      actualizarPuntoEstado("");
+    });
+  });
+
+  // ------------------------------------------------------------
+  // Interfaz — Ajustes: sincronización
+  // ------------------------------------------------------------
+  elem("btn-sync").addEventListener("click", function(){
+    if(!sesionValida()){
+      mostrarMensaje("msg-sync", "Inicia sesión primero.", "error");
+      return;
+    }
+    sincronizarTodo();
+  });
+
+  function pintarResumen(){
+    var filas = TABLAS.map(function(t){
+      var n = getTabla(t.nombre).length;
+      var ultima = getLastSync(t.nombre);
+      var texto = ultima ? new Date(ultima).toLocaleTimeString() : "—";
+      return "<tr><td>" + t.nombre + "</td><td>" + n + " filas · " + texto + "</td></tr>";
+    }).join("");
+    elem("tabla-resumen").innerHTML = filas;
+  }
+
+  // ------------------------------------------------------------
+  // Arranque
+  // ------------------------------------------------------------
+  cargarFormularioConexion();
+  pintarSesion();
+  pintarResumen();
+
+  if(sesionValida()){
+    sincronizarTodo();
+  }
+
+  // Al volver del multitarea, con margen de 30 s
+  var ocultoDesde = null;
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden){
+      ocultoDesde = Date.now();
+    }else if(ocultoDesde && (Date.now() - ocultoDesde) > 30000){
+      sincronizarTodo();
+      ocultoDesde = null;
+    }else{
+      ocultoDesde = null;
+    }
+  });
+
+  window.addEventListener("online", function(){
+    sincronizarTodo();
+  });
+
+})();
+</script>
+</body>
+</html>
