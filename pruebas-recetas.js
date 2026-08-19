@@ -40,7 +40,10 @@ function extraerLogicaPura(){
     "\nthis.calcularMedida = calcularMedida;" +
     "\nthis.extraerReferenciasIngredientes = extraerReferenciasIngredientes;" +
     "\nthis.validarLineasIngredientesForm = validarLineasIngredientesForm;" +
-    "\nthis.validarPasosForm = validarPasosForm;",
+    "\nthis.validarPasosForm = validarPasosForm;" +
+    "\nthis.filtrarRecetasActivas = filtrarRecetasActivas;" +
+    "\nthis.filasMenuDeReceta = filasMenuDeReceta;" +
+    "\nthis.formatearCantidadMostrada = formatearCantidadMostrada;",
     sandbox
   );
   return sandbox;
@@ -50,7 +53,8 @@ const {
   formatearNumero, escalarNumeroEnTexto, escalarLineaIngrediente,
   escalarPasoTexto, normalizarParaComparar, validarImportacion,
   opcionesUnidadPara, calcularMedida, extraerReferenciasIngredientes,
-  validarLineasIngredientesForm, validarPasosForm
+  validarLineasIngredientesForm, validarPasosForm,
+  filtrarRecetasActivas, filasMenuDeReceta, formatearCantidadMostrada
 } = extraerLogicaPura();
 
 // ------------------------------------------------------------
@@ -111,11 +115,11 @@ assertIgual(escalada.cantidadEscalada, 6, "4 * 1.5 = 6");
 assertIgual(escalada.textoEscalado, "6 cucharadas de aceite de oliva virgen extra", "sustituye 4 por 6");
 
 // Un número que no aparece de forma exacta en el texto (caso raro,
-// p.ej. una redacción distinta): no debe perder la línea, la antepone.
+// p.ej. una redacción distinta): nunca se antepone nada, se deja el
+// texto original intacto.
 linea = { id: "0099", texto: "un pellizco de sal", cantidad: 1, unidad: "tsp" };
 escalada = escalarLineaIngrediente(linea, 2);
-assert(escalada.textoEscalado.indexOf("un pellizco de sal") !== -1, "sin coincidencia numérica, conserva el texto original");
-assert(escalada.textoEscalado.indexOf("2") === 0, "sin coincidencia numérica, antepone la cantidad ya escalada");
+assertIgual(escalada.textoEscalado, "un pellizco de sal", "sin coincidencia numérica, el texto queda intacto, sin anteponer nada");
 
 // ==============================================================
 // Caso 3 — sustitución de {id} en los pasos
@@ -307,6 +311,129 @@ let resPasos = validarPasosForm([
 assertIgual(resPasos.errores.length, 0, "pasos válidos: sin errores");
 assertIgual(resPasos.pasos.length, 1, "la fila de paso vacía se descarta");
 assertIgual(resPasos.pasos[0].ingredientes_ref, ["0001"], "ingredientes_ref se deriva del texto, no de un campo aparte");
+
+// ==============================================================
+// Caso 7 — borrado lógico de una receta (nunca DELETE)
+// ==============================================================
+console.log("\n-- Caso 7: receta borrada que no reaparece tras sincronizar --");
+
+// Tras pulsar "Eliminar", la receta queda local con borrada=true (no se
+// borra la fila: un DELETE no se podría sincronizar al otro móvil).
+// El listado debe excluirla de inmediato.
+let recetasLocales = [
+  { id: "r1", titulo: "Receta A", borrada: false },
+  { id: "r2", titulo: "Receta B (recién borrada)", borrada: true }
+];
+assertIgual(
+  filtrarRecetasActivas(recetasLocales).map(function(r){ return r.id; }),
+  ["r1"],
+  "el listado activo excluye la receta recién marcada borrada=true"
+);
+
+// El siguiente ciclo de sincronización baja del servidor exactamente
+// esa misma fila (ya subida con borrada=true y un updated_at nuevo):
+// sigue sin reaparecer, no vuelve a "borrada=false" por arte de magia.
+let recetasTrasSincronizar = [
+  { id: "r1", titulo: "Receta A", borrada: false, updated_at: "2026-08-19T09:00:00Z" },
+  { id: "r2", titulo: "Receta B (recién borrada)", borrada: true, updated_at: "2026-08-19T09:05:00Z" }
+];
+assert(
+  !filtrarRecetasActivas(recetasTrasSincronizar).some(function(r){ return r.id === "r2"; }),
+  "tras sincronizar, la receta borrada sigue sin aparecer en el listado"
+);
+
+// El borrado también marca las filas de "menu" que apuntan a esa
+// receta, para no dejar huecos de menú apuntando a una receta que ya
+// no se lista. Una fila ya borrada de antes no se toca de nuevo.
+let menu = [
+  { id: "m1", receta_id: "r2", borrada: false },
+  { id: "m2", receta_id: "r1", borrada: false },
+  { id: "m3", receta_id: "r2", borrada: true }
+];
+assertIgual(
+  filasMenuDeReceta(menu, "r2").map(function(m){ return m.id; }),
+  ["m1"],
+  "solo se marcan las filas de menu de esa receta que aún no estaban borradas"
+);
+assertIgual(
+  filasMenuDeReceta(menu, "r1").map(function(m){ return m.id; }),
+  ["m2"],
+  "no se tocan filas de menu de otras recetas"
+);
+
+// ==============================================================
+// Caso 8 — fracciones en el texto (ASCII y unicode), factor no entero
+// ==============================================================
+console.log("\n-- Caso 8: fracciones ASCII y unicode en el texto --");
+
+// Bug reproducido con 5 raciones (factor 1,25): "1/2 cucharadita de
+// canela" salía como "0,63 × 1/2 cucharadita...". La fracción ASCII
+// debe reconocerse, convertirse a decimal, escalarse y mostrarse como
+// un solo número, sin anteponer nada.
+linea = { id: "0010", texto: "1/2 cucharadita de canela", cantidad: 0.5, unidad: "tsp" };
+escalada = escalarLineaIngrediente(linea, 1.25);
+assertIgual(escalada.cantidadEscalada, 0.625, "el valor exacto interno no se redondea: 0,5 * 1,25 = 0,625");
+assertIgual(escalada.textoEscalado, "3/4 cucharadita de canela", "la fracción ASCII se detecta, se escala y se sustituye por un solo número");
+assert(escalada.textoEscalado.indexOf("×") === -1, "nunca antepone el factor con ×");
+
+// La misma fracción escrita en unicode (½) se reconoce igual.
+linea = { id: "0011", texto: "½ cucharadita de canela", cantidad: 0.5, unidad: "tsp" };
+escalada = escalarLineaIngrediente(linea, 1.25);
+assertIgual(escalada.textoEscalado, "3/4 cucharadita de canela", "la fracción unicode ½ se reconoce igual que la ASCII 1/2");
+
+// Otra fracción unicode (¼), con un factor que la deja en un número
+// entero limpio.
+linea = { id: "0012", texto: "¼ de cucharadita de pimienta", cantidad: 0.25, unidad: "tsp" };
+escalada = escalarLineaIngrediente(linea, 2);
+assertIgual(escalada.textoEscalado, "1/2 de cucharadita de pimienta", "¼ escalado por 2 dobla a 1/2, como fracción legible");
+
+// Fracción ASCII en una unidad sin regla de redondeo especial (p.ej.
+// "taza"): se detecta y escala igual, mostrada como decimal.
+linea = { id: "0013", texto: "3/4 de taza de arroz", cantidad: 0.75, unidad: "cup" };
+escalada = escalarLineaIngrediente(linea, 2);
+assertIgual(escalada.textoEscalado, "1,5 de taza de arroz", "fracción ASCII 3/4 detectada y escalada aunque la unidad no tenga redondeo especial");
+
+// Si de verdad no hay ningún número (ni entero, ni decimal, ni
+// fracción) que corresponda a la cantidad, se deja el texto intacto:
+// nunca se inventa ni se antepone nada.
+linea = { id: "0014", texto: "un pellizco de sal", cantidad: 1, unidad: "tsp" };
+escalada = escalarLineaIngrediente(linea, 1.25);
+assertIgual(escalada.textoEscalado, "un pellizco de sal", "sin ningún número que escalar (ni siquiera en fracción), el texto queda intacto");
+
+// ==============================================================
+// Caso 9 — redondeo útil para cocinar (no el valor exacto)
+// ==============================================================
+console.log("\n-- Caso 9: redondeo útil para cocinar por familia de unidad --");
+
+// Contables (unidad null): al 0,5 más cercano.
+assertIgual(formatearCantidadMostrada(3.75, null), "4", "3,75 dientes redondea a 4");
+assertIgual(formatearCantidadMostrada(1.25, null), "1,5", "1,25 chiles redondea a 1,5");
+// Nunca por debajo de 0,5, aunque el resultado exacto sea menor.
+assertIgual(formatearCantidadMostrada(0.2, null), "0,5", "un contable nunca se muestra por debajo de 0,5");
+
+// Cucharadas/cucharaditas: a cuartos, como fracción legible.
+assertIgual(formatearCantidadMostrada(0.5, "tbsp"), "1/2", "0,5 cucharada se expresa como 1/2");
+assertIgual(formatearCantidadMostrada(0.75, "tsp"), "3/4", "0,75 cucharadita se expresa como 3/4");
+assertIgual(formatearCantidadMostrada(1.25, "tsp"), "1 1/4", "1,25 cucharaditas se expresa como número mixto 1 1/4");
+
+// Gramos/mililitros: entero por encima de 10, un decimal por debajo.
+assertIgual(formatearCantidadMostrada(15, "g"), "15", "por encima de 10 g, entero");
+assertIgual(formatearCantidadMostrada(7.5, "ml"), "7,5", "por debajo de 10 ml, un decimal");
+
+// Integración: 2 dientes de ajo a factor 1,25 (5 raciones desde base
+// 4) redondea a 2,5 dientes para mostrar, conservando el valor exacto
+// (2,5) para med_cantidad.
+linea = { id: "0015", texto: "2 dientes de ajo picados", cantidad: 2, unidad: null };
+escalada = escalarLineaIngrediente(linea, 1.25);
+assertIgual(escalada.cantidadEscalada, 2.5, "el valor exacto interno es 2,5, sin redondear");
+assertIgual(escalada.textoEscalado, "2,5 dientes de ajo picados", "2,5 ya es múltiplo de 0,5: se muestra tal cual");
+
+// Integración con factor 0,75: 2 cucharadas de aceite a 0,75 -> 1,5,
+// que ya es múltiplo de 0,25 y se expresa como número mixto.
+linea = { id: "0016", texto: "2 cucharadas de aceite de oliva", cantidad: 2, unidad: "tbsp" };
+escalada = escalarLineaIngrediente(linea, 0.75);
+assertIgual(escalada.cantidadEscalada, 1.5, "el valor exacto interno es 1,5");
+assertIgual(escalada.textoEscalado, "1 1/2 cucharadas de aceite de oliva", "1,5 cucharadas se muestra como número mixto 1 1/2");
 
 // ------------------------------------------------------------
 console.log("\n" + (fallos === 0 ? "Todas las pruebas pasaron." : fallos + " prueba(s) fallida(s)."));

@@ -124,6 +124,8 @@
     border:1px solid var(--verde);
   }
   button.boton:disabled{opacity:.5;cursor:default;}
+  button.boton.peligro{background:none;color:var(--error);border:1px solid var(--error);}
+  button.boton.peligro:active{background:var(--error);color:#fff;}
 
   .mensaje{
     margin-top:10px;
@@ -330,6 +332,7 @@
           <button class="boton secundario" id="btn-editar-receta" type="button">Editar</button>
           <button class="boton" id="btn-cocinada-hoy" type="button">Cocinada hoy</button>
         </div>
+        <button class="boton peligro" id="btn-eliminar-receta" type="button">Eliminar receta</button>
         <div id="msg-detalle"></div>
       </div>
 
@@ -727,30 +730,118 @@
     return texto.replace(".", ",");
   }
 
-  // Reemplaza, dentro de "texto", la aparición de "cantidadOriginal"
-  // (formateada tal y como se escribió en la receta) por la cantidad
-  // ya escalada, respetando el resto de la frase: el sustantivo y
-  // cualquier apunte entre paréntesis viven en el propio texto, no en
-  // un campo aparte. Si no encuentra el número exacto como token
-  // aislado, antepone la cantidad nueva en vez de perder la línea
-  // en silencio.
-  function escalarNumeroEnTexto(texto, cantidadOriginal, factor){
-    texto = texto || "";
-    var nuevaCantidad = cantidadOriginal * factor;
-    var strOriginal = formatearNumero(cantidadOriginal);
-    var strNueva = formatearNumero(nuevaCantidad);
-    var escapado = strOriginal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    var re = new RegExp("(^|[^0-9,.])" + escapado + "(?![0-9,])");
-    if(re.test(texto)){
-      return texto.replace(re, function(_, pre){ return pre + strNueva; });
+  // Fracciones unicode sueltas que pueden aparecer en el texto de una
+  // receta ("½ cucharadita de sal").
+  var MAPA_FRACCIONES_UNICODE = { "¼": 0.25, "½": 0.5, "¾": 0.75 };
+
+  // Un número en el texto de una receta puede venir como entero,
+  // decimal (coma o punto), fracción ASCII ("1/2"), carácter unicode
+  // ("½") o número mixto ("1 1/2", "1 ½"). El orden de las alternativas
+  // importa: la variante mixta va primero para que no la corte una
+  // alternativa más corta a mitad de camino.
+  var RE_NUMERO_TEXTO =
+    "\\d+\\s+(?:\\d+\\/\\d+|[¼½¾])" + "|" +  // mixto: "1 1/2", "1 ½"
+    "\\d+\\/\\d+" + "|" +                     // fracción ASCII: "1/2"
+    "[¼½¾]" + "|" +                           // fracción unicode suelta
+    "\\d+[.,]\\d+" + "|" +                    // decimal
+    "\\d+";                                   // entero
+
+  // Convierte un token ya capturado por RE_NUMERO_TEXTO a su valor
+  // decimal, sin asumir ninguna unidad.
+  function valorDeToken(tok){
+    tok = (tok || "").trim();
+    var mMixto = tok.match(/^(\d+)\s+(.+)$/);
+    if(mMixto) return parseInt(mMixto[1], 10) + valorDeToken(mMixto[2]);
+    if(Object.prototype.hasOwnProperty.call(MAPA_FRACCIONES_UNICODE, tok)){
+      return MAPA_FRACCIONES_UNICODE[tok];
     }
-    return strNueva + " × " + texto;
+    var mFraccion = tok.match(/^(\d+)\/(\d+)$/);
+    if(mFraccion){
+      var denominador = parseInt(mFraccion[2], 10);
+      return denominador === 0 ? NaN : parseInt(mFraccion[1], 10) / denominador;
+    }
+    return parseFloat(tok.replace(",", "."));
+  }
+
+  // Busca en "texto" el primer número (entero, decimal o fracción, en
+  // cualquiera de sus formas) cuyo valor coincida con cantidadOriginal.
+  // Devuelve su posición para poder sustituirlo sin tocar el resto de
+  // la frase.
+  function encontrarTokenCantidad(texto, cantidadOriginal){
+    var re = new RegExp(RE_NUMERO_TEXTO, "g");
+    var m;
+    while((m = re.exec(texto)) !== null){
+      var valor = valorDeToken(m[0]);
+      if(!isNaN(valor) && Math.abs(valor - cantidadOriginal) < 0.001){
+        return { texto: m[0], indice: m.index };
+      }
+    }
+    return null;
+  }
+
+  function redondearAlMultiplo(n, paso){
+    return Math.round(n / paso) * paso;
+  }
+
+  // Expresa una cantidad ya redondeada a cuartos como fracción legible
+  // en cocina: 0,5 -> "1/2", 0,75 -> "3/4", 1,25 -> "1 1/4".
+  function formatearFraccionCuartos(n){
+    var mapa = { 0.25: "1/4", 0.5: "1/2", 0.75: "3/4" };
+    var entero = Math.floor(n + 1e-9);
+    var frac = Math.round((n - entero) * 4) / 4;
+    if(frac >= 1){ entero += 1; frac = 0; }
+    var partes = [];
+    if(entero > 0) partes.push(String(entero));
+    if(frac > 0) partes.push(mapa[frac]);
+    return partes.length ? partes.join(" ") : "0";
+  }
+
+  var UNIDADES_CUCHARA = { tbsp: true, tsp: true };
+  var UNIDADES_PESO_VOLUMEN = { g: true, ml: true };
+
+  // Redondeo útil para cocinar (no el valor exacto, que se conserva
+  // aparte para med_cantidad y la cesta): cada familia de unidades se
+  // muestra a la precisión con la que de verdad se puede medir a ojo.
+  //   - Contables (unidad null: dientes, chiles, pechugas...): al 0,5
+  //     más cercano, nunca por debajo de 0,5.
+  //   - Cucharadas/cucharaditas: a cuartos, como fracción legible.
+  //   - Gramos/mililitros: entero por encima de 10, un decimal por
+  //     debajo.
+  function formatearCantidadMostrada(cantidad, unidad){
+    if(unidad && UNIDADES_CUCHARA[unidad]){
+      return formatearFraccionCuartos(redondearAlMultiplo(cantidad, 0.25));
+    }
+    if(unidad && UNIDADES_PESO_VOLUMEN[unidad]){
+      var redondeado = cantidad > 10 ? Math.round(cantidad) : Math.round(cantidad * 10) / 10;
+      return formatearNumero(redondeado);
+    }
+    if(!unidad){
+      return formatearNumero(Math.max(0.5, redondearAlMultiplo(cantidad, 0.5)));
+    }
+    return formatearNumero(cantidad);
+  }
+
+  // Reemplaza, dentro de "texto", el número que representa
+  // cantidadOriginal (en cualquiera de sus formas: entero, decimal,
+  // fracción ASCII o unicode) por la cantidad ya escalada y redondeada
+  // para cocinar, respetando el resto de la frase: el sustantivo y
+  // cualquier apunte entre paréntesis viven en el propio texto, no en
+  // un campo aparte. Nunca antepone nada: si no encuentra ningún
+  // número que escalar, deja el texto original intacto.
+  function escalarNumeroEnTexto(texto, cantidadOriginal, factor, unidad){
+    texto = texto || "";
+    if(cantidadOriginal == null || isNaN(cantidadOriginal)) return texto;
+    var encontrado = encontrarTokenCantidad(texto, cantidadOriginal);
+    if(!encontrado) return texto;
+    var nuevaCantidad = cantidadOriginal * factor;
+    var strNueva = formatearCantidadMostrada(nuevaCantidad, unidad);
+    return texto.slice(0, encontrado.indice) + strNueva + texto.slice(encontrado.indice + encontrado.texto.length);
   }
 
   function escalarLineaIngrediente(linea, factor){
     var copia = Object.assign({}, linea);
     copia.cantidadEscalada = linea.cantidad * factor;
-    copia.textoEscalado = escalarNumeroEnTexto(linea.texto, linea.cantidad, factor);
+    copia.textoEscalado = escalarNumeroEnTexto(linea.texto, linea.cantidad, factor, linea.unidad);
     return copia;
   }
 
@@ -758,7 +849,7 @@
     return (texto || "").replace(/\{(\w+)\}/g, function(coincidencia, id){
       var linea = lineasPorId[id];
       if(!linea) return coincidencia;
-      return escalarNumeroEnTexto(linea.texto, linea.cantidad, factor);
+      return escalarNumeroEnTexto(linea.texto, linea.cantidad, factor, linea.unidad);
     });
   }
 
@@ -983,6 +1074,23 @@
     return { errores: errores, pasos: validos };
   }
 
+  // Filtra las recetas no borradas, en el mismo orden recibido. La usan
+  // tanto el listado como la búsqueda, de forma que un borrado lógico
+  // (borrada=true) desaparece de la UI sin necesidad de un DELETE real:
+  // un DELETE no se puede sincronizar fila a fila y la receta
+  // reaparecería en la siguiente sincronización del otro móvil.
+  function filtrarRecetasActivas(recetas){
+    return (recetas || []).filter(function(r){ return !r.borrada; });
+  }
+
+  // Filas de "menu" que referencian una receta y que todavía no están
+  // borradas. Al borrar una receta hay que marcar también estas filas,
+  // para que no queden huecos de menú apuntando a una receta que ya no
+  // se lista.
+  function filasMenuDeReceta(menu, recetaId){
+    return (menu || []).filter(function(m){ return m.receta_id === recetaId && !m.borrada; });
+  }
+
   // === FIN LÓGICA PURA RECETAS ===
 
   var sincronizando = false;
@@ -1203,13 +1311,27 @@
   }
 
   function listarRecetasActivas(){
-    return getTabla("recetas").filter(function(r){ return !r.borrada; });
+    return filtrarRecetasActivas(getTabla("recetas"));
   }
 
   function obtenerReceta(id){
     var encontrada = null;
     listarRecetasActivas().forEach(function(r){ if(r.id === id) encontrada = r; });
     return encontrada;
+  }
+
+  // Borrado lógico: nunca DELETE (sección "no tocar supabase.sql" /
+  // sincronización fila a fila). Marca la receta como borrada=true con
+  // updated_at nuevo, y hace lo mismo con las filas de "menu" que la
+  // referencien, para no dejar huecos de menú apuntando a una receta
+  // que ya no aparece en el listado.
+  function eliminarReceta(id){
+    var r = obtenerReceta(id);
+    if(!r) return;
+    upsertLocal("recetas", "id", Object.assign({}, r, { borrada: true }));
+    filasMenuDeReceta(getTabla("menu"), id).forEach(function(m){
+      upsertLocal("menu", "id", Object.assign({}, m, { borrada: true }));
+    });
   }
 
   function ingredientePorId(id){
@@ -1528,6 +1650,21 @@
 
   elem("btn-editar-receta").addEventListener("click", function(){
     abrirFormularioReceta(vistaRecetaActual);
+  });
+
+  elem("btn-eliminar-receta").addEventListener("click", function(){
+    var r = obtenerReceta(vistaRecetaActual);
+    if(!r) return;
+    var confirmado = window.confirm(
+      "¿Eliminar «" + r.titulo + "»?\n\nDejará de aparecer en el listado en los dos móviles, " +
+      "pero no se borra de verdad: queda marcada como eliminada."
+    );
+    if(!confirmado) return;
+    eliminarReceta(r.id);
+    pararTodosTemporizadores();
+    mostrarSubvistaRecetas("lista");
+    renderListaRecetas();
+    sincronizarTodo();
   });
 
   // ------------------------------------------------------------
