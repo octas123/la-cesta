@@ -147,6 +147,146 @@
     padding:60px 20px;
   }
   .vacio .icono{font-size:2.5rem;margin-bottom:8px;}
+
+  textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--borde);
+    border-radius:8px;
+    font-size:.95rem;
+    font-family:inherit;
+    background:#fff;
+    color:var(--texto);
+    resize:vertical;
+  }
+  select{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--borde);
+    border-radius:8px;
+    font-size:1rem;
+    background:#fff;
+    color:var(--texto);
+  }
+  input[type=number]{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--borde);
+    border-radius:8px;
+    font-size:1rem;
+    background:#fff;
+    color:var(--texto);
+  }
+  input[type=file]{width:100%;margin-top:6px;font-size:.85rem;}
+  .fila-check{display:flex;align-items:center;gap:8px;margin:12px 0;}
+  .fila-check input{width:18px;height:18px;}
+  .fila-check label{margin:0;}
+
+  .encabezado-vista{display:flex;align-items:center;margin-bottom:10px;}
+  .btn-volver{
+    background:none;border:none;color:var(--verde);
+    font-size:1rem;padding:6px 4px;cursor:pointer;font-weight:600;
+  }
+
+  .buscador{
+    width:100%;padding:12px;border:1px solid var(--borde);
+    border-radius:8px;font-size:1rem;margin-bottom:10px;background:#fff;color:var(--texto);
+  }
+  .filtros-recetas{display:flex;gap:8px;margin-bottom:14px;align-items:stretch;}
+  .filtros-recetas select{flex:1;}
+  .chip-toggle{
+    display:flex;align-items:center;gap:4px;font-size:.85rem;color:var(--texto-sec);
+    padding:0 14px;border:1px solid var(--borde);border-radius:20px;background:#fff;
+    cursor:pointer;white-space:nowrap;
+  }
+  .chip-toggle.activo{background:var(--verde);color:#fff;border-color:var(--verde);}
+
+  .tarjeta-receta{
+    background:var(--tarjeta);border:1px solid var(--borde);border-radius:var(--radio);
+    padding:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;
+  }
+  .tarjeta-receta .cuerpo{flex:1;min-width:0;}
+  .tarjeta-receta h3{margin:0 0 4px;font-size:1.05rem;}
+  .tarjeta-receta .meta{font-size:.8rem;color:var(--texto-sec);}
+  .tarjeta-receta .etiquetas{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;}
+  .etiqueta{font-size:.72rem;background:#eef2ea;color:var(--verde-osc);padding:2px 8px;border-radius:10px;}
+  .btn-favorita{
+    background:none;border:none;font-size:1.3rem;line-height:1;cursor:pointer;
+    color:#d8d5c8;flex-shrink:0;padding:2px;
+  }
+  .btn-favorita.activa{color:#e0a33e;}
+
+  .fab{
+    position:fixed;right:20px;bottom:88px;width:56px;height:56px;border-radius:50%;
+    background:var(--verde);color:#fff;border:none;font-size:1.6rem;line-height:1;
+    box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:9;cursor:pointer;
+  }
+
+  .raciones-stepper{display:flex;align-items:center;gap:16px;justify-content:center;margin:14px 0 4px;}
+  .raciones-stepper button{
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--verde);
+    background:#fff;color:var(--verde);font-size:1.3rem;cursor:pointer;
+  }
+  .raciones-stepper button:active{background:var(--verde);color:#fff;}
+  .raciones-stepper .valor{font-size:1.05rem;font-weight:700;min-width:90px;text-align:center;}
+
+  .linea-ingrediente{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    padding:9px 0;border-bottom:1px solid var(--borde);
+  }
+  .linea-ingrediente:last-child{border-bottom:none;}
+  .linea-ingrediente .texto{font-size:.95rem;flex:1;}
+  .opcional-tag{color:var(--texto-sec);font-size:.78rem;}
+  .grupo-titulo{
+    font-weight:700;font-size:.8rem;color:var(--verde-osc);margin:14px 0 2px;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  .chip-basico{
+    flex-shrink:0;font-size:.72rem;padding:5px 9px;border-radius:12px;
+    border:1px solid var(--borde);background:#fff;cursor:pointer;white-space:nowrap;
+  }
+  .chip-basico.en-casa{color:var(--verde);border-color:var(--verde);}
+  .chip-basico.sin-existencias{color:var(--error);border-color:var(--error);background:#fbeceb;}
+
+  .paso{padding:14px 0;border-bottom:1px solid var(--borde);}
+  .paso:last-child{border-bottom:none;}
+  .paso .num{color:var(--verde);font-weight:700;font-size:.8rem;}
+  .paso h4{margin:2px 0 6px;font-size:.95rem;}
+  .paso p{margin:0;line-height:1.45;}
+  .temporizador{margin-top:10px;display:flex;align-items:center;gap:10px;}
+  .temporizador .reloj{font-variant-numeric:tabular-nums;font-size:1.15rem;font-weight:700;min-width:56px;}
+  .temporizador button{
+    padding:8px 14px;border-radius:8px;border:1px solid var(--verde);
+    background:#fff;color:var(--verde);font-size:.85rem;cursor:pointer;
+  }
+  .temporizador.activo .reloj{color:var(--verde);}
+  .temporizador.terminado .reloj{color:var(--error);}
+
+  .acciones-cocina{display:flex;gap:10px;margin:16px 0 4px;}
+  .acciones-cocina button{flex:1;margin-top:0;}
+
+  .previa-importacion{font-size:.88rem;}
+  .previa-importacion h4{margin:12px 0 4px;font-size:.82rem;color:var(--verde-osc);}
+  .previa-importacion ul{margin:4px 0;padding-left:20px;}
+  .previa-importacion li.aviso{color:#8a6d1f;}
+  .previa-importacion li.error{color:var(--error);}
+
+  .fila-editable{
+    border:1px solid var(--borde);border-radius:10px;padding:12px;margin-bottom:10px;background:#fff;
+  }
+  .fila-editable select, .fila-editable input[type=text], .fila-editable textarea{margin-bottom:8px;}
+  .fila-editable-linea{display:flex;gap:8px;}
+  .fila-editable-linea input, .fila-editable-linea select{flex:1;margin-bottom:8px;}
+  .fila-editable-pie{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+  .fila-check-inline{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--texto-sec);}
+  .fila-check-inline input{width:16px;height:16px;}
+  .btn-eliminar-fila{
+    background:none;border:none;color:var(--error);font-size:.85rem;cursor:pointer;padding:4px 6px;
+  }
+  .aviso-medida{font-size:.78rem;margin:0 0 8px;}
+  .aviso-medida.ok{color:var(--texto-sec);}
+  .aviso-medida.error{color:var(--error);}
+  .btn-anadir-fila{margin-top:4px;}
 </style>
 </head>
 <body>
@@ -158,11 +298,120 @@
 
 <main>
   <section id="pantalla-recetas" class="pantalla activa">
-    <div class="vacio">
-      <div class="icono">🍲</div>
-      <p>No hay recetas todavía.</p>
-      <p>Se añadirán en la siguiente fase.</p>
+
+    <div id="vista-recetas-lista">
+      <input type="text" id="in-buscar-receta" class="buscador" placeholder="Buscar receta...">
+      <div class="filtros-recetas">
+        <select id="sel-filtro-etiqueta"><option value="">Todas las etiquetas</option></select>
+        <button type="button" class="chip-toggle" id="btn-filtro-favoritas">★ Favoritas</button>
+      </div>
+      <div id="lista-recetas"></div>
     </div>
+
+    <div id="vista-receta-detalle" style="display:none;">
+      <div class="encabezado-vista">
+        <button class="btn-volver" id="btn-volver-detalle" type="button">‹ Recetas</button>
+      </div>
+      <div class="tarjeta">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <h2 id="detalle-titulo" style="margin:0;font-size:1.15rem;color:var(--texto);"></h2>
+          <button class="btn-favorita" id="detalle-favorita" type="button">★</button>
+        </div>
+        <p id="detalle-descripcion" style="color:var(--texto-sec);font-size:.9rem;margin:6px 0 0;"></p>
+        <div id="detalle-meta" style="margin-top:8px;font-size:.82rem;color:var(--texto-sec);"></div>
+
+        <div class="raciones-stepper">
+          <button id="btn-raciones-menos" type="button">−</button>
+          <span class="valor"><span id="detalle-raciones-num"></span> raciones</span>
+          <button id="btn-raciones-mas" type="button">+</button>
+        </div>
+
+        <div class="acciones-cocina">
+          <button class="boton secundario" id="btn-editar-receta" type="button">Editar</button>
+          <button class="boton" id="btn-cocinada-hoy" type="button">Cocinada hoy</button>
+        </div>
+        <div id="msg-detalle"></div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Ingredientes</h2>
+        <div id="detalle-ingredientes"></div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Pasos</h2>
+        <div id="detalle-pasos"></div>
+      </div>
+
+      <div class="tarjeta" id="detalle-notas-tarjeta" style="display:none;">
+        <h2>Notas</h2>
+        <p id="detalle-notas" style="margin:0;white-space:pre-wrap;"></p>
+      </div>
+    </div>
+
+    <div id="vista-receta-form" style="display:none;">
+      <div class="encabezado-vista">
+        <button class="btn-volver" id="btn-volver-form" type="button">‹ Cancelar</button>
+      </div>
+      <div class="tarjeta">
+        <h2 id="form-titulo-tarjeta">Nueva receta</h2>
+        <label for="f-titulo">Título</label>
+        <input type="text" id="f-titulo">
+        <label for="f-descripcion">Descripción</label>
+        <textarea id="f-descripcion" rows="2"></textarea>
+        <label for="f-raciones-base">Raciones base</label>
+        <input type="number" id="f-raciones-base" min="1" value="4">
+        <label for="f-tiempo-prep">Tiempo de preparación (min)</label>
+        <input type="number" id="f-tiempo-prep" min="0">
+        <label for="f-tiempo-coccion">Tiempo de cocción (min)</label>
+        <input type="number" id="f-tiempo-coccion" min="0">
+        <label for="f-dificultad">Dificultad</label>
+        <select id="f-dificultad">
+          <option value="">Sin especificar</option>
+          <option value="facil">Fácil</option>
+          <option value="media">Media</option>
+          <option value="dificil">Difícil</option>
+        </select>
+        <label for="f-etiquetas">Etiquetas (separadas por comas)</label>
+        <input type="text" id="f-etiquetas">
+        <label for="f-notas">Notas</label>
+        <textarea id="f-notas" rows="3"></textarea>
+        <div class="fila-check">
+          <input type="checkbox" id="f-favorita">
+          <label for="f-favorita">Favorita</label>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Ingredientes</h2>
+        <div id="form-ingredientes-lista"></div>
+        <button class="boton secundario btn-anadir-fila" id="btn-anadir-ingrediente" type="button">+ Añadir ingrediente</button>
+        <p style="font-size:.8rem;color:var(--texto-sec);margin-top:12px;">
+          ¿Falta un ingrediente en la lista desplegable? Debe entrar como
+          ingrediente nuevo importando un bloque JSON desde Ajustes → Importar
+          recetas antes de poder enlazarlo aquí.
+        </p>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Pasos</h2>
+        <div id="form-pasos-lista"></div>
+        <button class="boton secundario btn-anadir-fila" id="btn-anadir-paso" type="button">+ Añadir paso</button>
+        <p style="font-size:.8rem;color:var(--texto-sec);margin-top:12px;">
+          Usa <code>{id}</code> dentro del texto (por ejemplo <code>{0001}</code>)
+          para referenciar, ya escalada, la cantidad de un ingrediente de la
+          lista de arriba.
+        </p>
+      </div>
+
+      <div class="tarjeta">
+        <button class="boton" id="btn-guardar-receta" type="button">Guardar</button>
+        <div id="msg-form-receta"></div>
+      </div>
+    </div>
+
+    <button class="fab" id="btn-nueva-receta" type="button" title="Nueva receta">+</button>
+
   </section>
 
   <section id="pantalla-ajustes" class="pantalla">
@@ -199,6 +448,29 @@
       <button class="boton" id="btn-sync">Sincronizar ahora</button>
       <div id="msg-sync"></div>
       <table class="resumen" id="tabla-resumen"></table>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Importar recetas</h2>
+      <label for="in-importar-json">Pega aquí el bloque JSON generado en el chat</label>
+      <textarea id="in-importar-json" rows="6" placeholder='{"version":1,"ingredientes_nuevos":[...],"recetas":[...]}'></textarea>
+      <label for="in-importar-archivo">o sube un archivo .json</label>
+      <input type="file" id="in-importar-archivo" accept="application/json,.json">
+      <button class="boton secundario" id="btn-cargar-semilla" type="button">Cargar receta de ejemplo (demo, ficticia)</button>
+      <button class="boton" id="btn-previsualizar-importacion" type="button">Vista previa</button>
+      <div id="previa-importacion"></div>
+      <button class="boton" id="btn-confirmar-importacion" type="button" style="display:none;">Confirmar importación</button>
+      <div id="msg-importacion"></div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Vocabulario de ingredientes</h2>
+      <p style="font-size:.85rem;color:var(--texto-sec);margin:0 0 6px;">
+        Lista compacta de los ingredientes ya dados de alta, para pegar en el chat
+        y evitar duplicados con otro slug.
+      </p>
+      <button class="boton secundario" id="btn-exportar-vocabulario" type="button">Exportar vocabulario</button>
+      <textarea id="out-vocabulario" rows="4" readonly style="margin-top:10px;display:none;"></textarea>
     </div>
   </section>
 </main>
@@ -440,6 +712,279 @@
 
   // === FIN LÓGICA PURA (ver pruebas-sync.js) ===
 
+  // ------------------------------------------------------------
+  // Recetas — escalado y validación de importación (lógica pura)
+  // ------------------------------------------------------------
+  // Igual que el bloque de sincronización: sin DOM, sin fetch, sin
+  // localStorage, para poder probarla aislada con Node.
+  // === INICIO LÓGICA PURA RECETAS (ver pruebas-recetas.js) ===
+
+  function formatearNumero(n){
+    if(typeof n !== "number" || !isFinite(n)) return String(n);
+    var redondeado = Math.round(n * 100) / 100;
+    var texto = redondeado.toFixed(2);
+    texto = texto.replace(/0+$/, "").replace(/\.$/, "");
+    return texto.replace(".", ",");
+  }
+
+  // Reemplaza, dentro de "texto", la aparición de "cantidadOriginal"
+  // (formateada tal y como se escribió en la receta) por la cantidad
+  // ya escalada, respetando el resto de la frase: el sustantivo y
+  // cualquier apunte entre paréntesis viven en el propio texto, no en
+  // un campo aparte. Si no encuentra el número exacto como token
+  // aislado, antepone la cantidad nueva en vez de perder la línea
+  // en silencio.
+  function escalarNumeroEnTexto(texto, cantidadOriginal, factor){
+    texto = texto || "";
+    var nuevaCantidad = cantidadOriginal * factor;
+    var strOriginal = formatearNumero(cantidadOriginal);
+    var strNueva = formatearNumero(nuevaCantidad);
+    var escapado = strOriginal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    var re = new RegExp("(^|[^0-9,.])" + escapado + "(?![0-9,])");
+    if(re.test(texto)){
+      return texto.replace(re, function(_, pre){ return pre + strNueva; });
+    }
+    return strNueva + " × " + texto;
+  }
+
+  function escalarLineaIngrediente(linea, factor){
+    var copia = Object.assign({}, linea);
+    copia.cantidadEscalada = linea.cantidad * factor;
+    copia.textoEscalado = escalarNumeroEnTexto(linea.texto, linea.cantidad, factor);
+    return copia;
+  }
+
+  function escalarPasoTexto(texto, lineasPorId, factor){
+    return (texto || "").replace(/\{(\w+)\}/g, function(coincidencia, id){
+      var linea = lineasPorId[id];
+      if(!linea) return coincidencia;
+      return escalarNumeroEnTexto(linea.texto, linea.cantidad, factor);
+    });
+  }
+
+  var RE_DIACRITICOS = new RegExp("[" + String.fromCharCode(0x0300) + "-" + String.fromCharCode(0x036f) + "]", "g");
+
+  function normalizarParaComparar(s){
+    return (s || "").toString().toLowerCase()
+      .normalize("NFD").replace(RE_DIACRITICOS, "")
+      .trim();
+  }
+
+  // Valida un bloque de importación (formato de la sección 7 de la
+  // especificación) contra los ingredientes ya existentes. No decide
+  // nada por sí sola sobre nombres parecidos: solo avisa. El único
+  // motivo de rechazo total es un ing_id referenciado que no existe
+  // ni en la base ni en ingredientes_nuevos, porque sin él la cesta
+  // no podría sumar esa receta (sección 7).
+  function validarImportacion(payload, ingredientesExistentes){
+    var errores = [];
+    var avisos = [];
+
+    if(!payload || typeof payload !== "object"){
+      return { ok:false, errores:["El JSON pegado no es un objeto válido."], avisos:[],
+        ingredientesNuevos:[], ingredientesDuplicados:[], recetas:[] };
+    }
+
+    if(payload.version !== 1){
+      avisos.push("La versión del bloque no es 1; se importa de todas formas.");
+    }
+
+    var nuevos = Array.isArray(payload.ingredientes_nuevos) ? payload.ingredientes_nuevos : [];
+    var recetas = Array.isArray(payload.recetas) ? payload.recetas : [];
+
+    var existentesPorId = {};
+    (ingredientesExistentes || []).forEach(function(i){ existentesPorId[i.id] = i; });
+
+    var idsDisponibles = {};
+    Object.keys(existentesPorId).forEach(function(id){ idsDisponibles[id] = true; });
+
+    var ingredientesNuevos = [];
+    var ingredientesDuplicados = [];
+
+    nuevos.forEach(function(ing){
+      if(!ing || !ing.id){
+        errores.push("Un ingrediente nuevo no tiene 'id'.");
+        return;
+      }
+      if(existentesPorId[ing.id]){
+        ingredientesDuplicados.push(ing.id);
+        avisos.push("'" + ing.id + "' ya existe en la base; se ignora el ingrediente nuevo con ese id.");
+        idsDisponibles[ing.id] = true;
+        return;
+      }
+      var nombreNorm = normalizarParaComparar(ing.nombre);
+      (ingredientesExistentes || []).forEach(function(ex){
+        var exNombreNorm = normalizarParaComparar(ex.nombre);
+        var seParecen = !!nombreNorm && !!exNombreNorm && (
+          nombreNorm === exNombreNorm ||
+          exNombreNorm.indexOf(nombreNorm) !== -1 ||
+          nombreNorm.indexOf(exNombreNorm) !== -1
+        );
+        var aliasCoincide = (ex.alias || []).some(function(a){ return normalizarParaComparar(a) === nombreNorm; });
+        if(seParecen || aliasCoincide){
+          avisos.push("'" + ing.nombre + "' se parece a '" + ex.nombre + "' (" + ex.id + "); comprueba que no sea el mismo ingrediente con otro slug.");
+        }
+      });
+      idsDisponibles[ing.id] = true;
+      ingredientesNuevos.push(ing);
+    });
+
+    recetas.forEach(function(receta, idx){
+      if(!receta || !receta.titulo){
+        errores.push("La receta en la posición " + (idx + 1) + " no tiene título.");
+      }
+      var lineas = (receta && Array.isArray(receta.ingredientes)) ? receta.ingredientes : [];
+      lineas.forEach(function(linea){
+        if(!linea.ing_id || !idsDisponibles[linea.ing_id]){
+          errores.push("Receta '" + (receta && receta.titulo ? receta.titulo : idx + 1) +
+            "': el ingrediente '" + (linea.ing_id || "?") + "' no existe en la base ni en ingredientes_nuevos.");
+        }
+      });
+    });
+
+    return {
+      ok: errores.length === 0,
+      errores: errores,
+      avisos: avisos,
+      ingredientesNuevos: ingredientesNuevos,
+      ingredientesDuplicados: ingredientesDuplicados,
+      recetas: recetas
+    };
+  }
+
+  // Unidades seleccionables para una línea de ingrediente: la unidad
+  // base del ingrediente (factor 1) y cualquier clave de sus
+  // equivalencias. Nunca se inventa una unidad que no esté ahí.
+  function opcionesUnidadPara(ingCanon){
+    if(!ingCanon) return [];
+    var vistas = {};
+    var opciones = [];
+    if(ingCanon.unidad_base && !vistas[ingCanon.unidad_base]){
+      vistas[ingCanon.unidad_base] = true;
+      opciones.push(ingCanon.unidad_base);
+    }
+    Object.keys(ingCanon.equivalencias || {}).forEach(function(u){
+      if(!vistas[u]){ vistas[u] = true; opciones.push(u); }
+    });
+    return opciones;
+  }
+
+  // Traduce cantidad + unidad a med_cantidad/med_unidad usando las
+  // equivalencias del ingrediente canónico. Si la unidad no es la
+  // base ni una clave conocida de equivalencias, no inventa un
+  // número: devuelve ok:false con el motivo.
+  function calcularMedida(ingCanon, cantidad, unidad){
+    if(!ingCanon) return { ok:false, motivo:"Selecciona un ingrediente." };
+    if(cantidad == null || typeof cantidad !== "number" || isNaN(cantidad)){
+      return { ok:false, motivo:"Cantidad inválida." };
+    }
+    if(!unidad) return { ok:false, motivo:"Selecciona una unidad." };
+    if(unidad === ingCanon.unidad_base){
+      return { ok:true, med_cantidad: cantidad, med_unidad: ingCanon.unidad_base };
+    }
+    var factor = (ingCanon.equivalencias || {})[unidad];
+    if(factor == null){
+      return { ok:false, motivo:"'" + unidad + "' no tiene equivalencia definida para " + ingCanon.nombre + "." };
+    }
+    return { ok:true, med_cantidad: cantidad * factor, med_unidad: ingCanon.unidad_base };
+  }
+
+  // Extrae, sin duplicados y en orden de aparición, los ids referenciados
+  // como {id} dentro del texto de un paso.
+  function extraerReferenciasIngredientes(texto){
+    var vistos = {};
+    var refs = [];
+    (texto || "").replace(/\{(\w+)\}/g, function(coincidencia, id){
+      if(!vistos[id]){ vistos[id] = true; refs.push(id); }
+      return coincidencia;
+    });
+    return refs;
+  }
+
+  // Valida las líneas de ingredientes editadas en el formulario contra
+  // los ingredientes canónicos disponibles. Las filas totalmente
+  // vacías (fila añadida y no rellenada) se ignoran en vez de dar
+  // error. Una fila ya cargada desde una importación y no tocada en
+  // esta sesión conserva su med_cantidad/med_unidad originales aunque
+  // "unidad" esté a null (convención de líneas contables, sección 4.3).
+  function validarLineasIngredientesForm(filas, ingredientesDisponibles){
+    var porId = {};
+    (ingredientesDisponibles || []).forEach(function(i){ porId[i.id] = i; });
+    var errores = [];
+    var validas = [];
+
+    (filas || []).forEach(function(fila, idx){
+      var vacia = !fila.ing_id && !fila.texto && fila.cantidad == null;
+      if(vacia) return;
+
+      var nombre = (fila.ing_id && porId[fila.ing_id]) ? porId[fila.ing_id].nombre : ("la línea " + (idx + 1));
+
+      if(!fila.ing_id){
+        errores.push("Falta elegir el ingrediente en " + nombre + ".");
+        return;
+      }
+      if(!fila.texto || !String(fila.texto).trim()){
+        errores.push(nombre + ": falta el texto que se muestra al cocinar.");
+        return;
+      }
+      if(fila.cantidad == null || isNaN(fila.cantidad)){
+        errores.push(nombre + ": falta la cantidad.");
+        return;
+      }
+      if(fila.medidaError){
+        errores.push(nombre + ": " + fila.medidaError);
+        return;
+      }
+      if(fila.med_cantidad == null || !fila.med_unidad){
+        errores.push(nombre + ": selecciona una unidad para calcular la cantidad de compra.");
+        return;
+      }
+      validas.push({
+        id: fila.id,
+        texto: String(fila.texto).trim(),
+        cantidad: fila.cantidad,
+        unidad: fila.unidad || null,
+        ing_id: fila.ing_id,
+        med_cantidad: fila.med_cantidad,
+        med_unidad: fila.med_unidad,
+        opcional: !!fila.opcional,
+        grupo: fila.grupo || null
+      });
+    });
+
+    return { errores: errores, lineas: validas };
+  }
+
+  // Valida los pasos editados en el formulario. Una fila vacía se
+  // ignora; ingredientes_ref se deriva siempre del propio texto (no
+  // es un campo editable a mano, así nunca queda desincronizado).
+  function validarPasosForm(pasos){
+    var errores = [];
+    var validos = [];
+
+    (pasos || []).forEach(function(paso, idx){
+      var vacio = (!paso.texto || !String(paso.texto).trim()) && !paso.titulo && paso.tiempo_s == null;
+      if(vacio) return;
+
+      if(!paso.texto || !String(paso.texto).trim()){
+        errores.push("Paso " + (idx + 1) + ": falta el texto.");
+        return;
+      }
+      validos.push({
+        orden: paso.orden != null ? paso.orden : (validos.length + 1),
+        titulo: (paso.titulo && String(paso.titulo).trim()) ? String(paso.titulo).trim() : null,
+        texto: String(paso.texto).trim(),
+        tiempo_s: (paso.tiempo_s != null && !isNaN(paso.tiempo_s)) ? paso.tiempo_s : null,
+        ingredientes_ref: extraerReferenciasIngredientes(paso.texto)
+      });
+    });
+
+    validos.sort(function(a, b){ return a.orden - b.orden; });
+    return { errores: errores, pasos: validos };
+  }
+
+  // === FIN LÓGICA PURA RECETAS ===
+
   var sincronizando = false;
 
   function cabecerasDatos(){
@@ -588,12 +1133,14 @@
         actualizarPuntoEstado("ok");
         mostrarMensaje("msg-sync", "Sincronizado " + new Date().toLocaleTimeString(), "ok");
         pintarResumen();
+        refrescarUIRecetasTrasSync();
       })
       .catch(function(err){
         sincronizando = false;
         actualizarPuntoEstado("error");
         mostrarMensaje("msg-sync", err.message || "Error de sincronización.", "error");
         pintarResumen();
+        refrescarUIRecetasTrasSync();
       });
   }
 
@@ -617,6 +1164,671 @@
   document.querySelectorAll("nav.tabs button").forEach(function(b){
     b.addEventListener("click", function(){ irAPantalla(b.dataset.pantalla); });
   });
+
+  // ------------------------------------------------------------
+  // Recetas — utilidades generales
+  // ------------------------------------------------------------
+  function escaparHtml(s){
+    var mapa = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" };
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return mapa[c]; });
+  }
+
+  function capitalizar(s){
+    s = String(s || "");
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function generarId(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+  }
+
+  function hoyISO(){ return new Date().toISOString().slice(0, 10); }
+
+  // Escribe (o crea) una fila local marcándola pendiente de subir.
+  // updated_at lo pone el cliente aquí mismo, no un trigger: es la
+  // pieza que hace posible que gane el cambio más reciente entre los
+  // dos móviles (sección 6 de la especificación).
+  function upsertLocal(nombreTabla, pk, filaParcial){
+    var filas = getTabla(nombreTabla);
+    var idx = -1;
+    filas.forEach(function(f, i){ if(f[pk] === filaParcial[pk]) idx = i; });
+    var base = idx >= 0 ? filas[idx] : {};
+    var fila = Object.assign({}, base, filaParcial);
+    fila.updated_at = new Date().toISOString();
+    fila._dirty = true;
+    if(idx >= 0){ filas[idx] = fila; } else { filas.push(fila); }
+    setTabla(nombreTabla, filas);
+    return fila;
+  }
+
+  function listarRecetasActivas(){
+    return getTabla("recetas").filter(function(r){ return !r.borrada; });
+  }
+
+  function obtenerReceta(id){
+    var encontrada = null;
+    listarRecetasActivas().forEach(function(r){ if(r.id === id) encontrada = r; });
+    return encontrada;
+  }
+
+  function ingredientePorId(id){
+    var encontrado = null;
+    getTabla("ingredientes").forEach(function(i){ if(i.id === id) encontrado = i; });
+    return encontrado;
+  }
+
+  function todasLasEtiquetas(){
+    var set = {};
+    listarRecetasActivas().forEach(function(r){
+      (r.etiquetas || []).forEach(function(e){ set[e] = true; });
+    });
+    return Object.keys(set).sort(function(a, b){ return a.localeCompare(b, "es"); });
+  }
+
+  // ------------------------------------------------------------
+  // Recetas — subvistas (lista / detalle / formulario)
+  // ------------------------------------------------------------
+  var vistaRecetaActual = null;
+  var racionesVista = null;
+  var editandoRecetaId = null;
+  var soloFavoritasActivo = false;
+  var temporizadores = {};
+
+  function mostrarSubvistaRecetas(nombre){
+    elem("vista-recetas-lista").style.display = nombre === "lista" ? "block" : "none";
+    elem("vista-receta-detalle").style.display = nombre === "detalle" ? "block" : "none";
+    elem("vista-receta-form").style.display = nombre === "form" ? "block" : "none";
+    elem("btn-nueva-receta").style.display = nombre === "lista" ? "flex" : "none";
+  }
+
+  function poblarSelectEtiquetas(){
+    var sel = elem("sel-filtro-etiqueta");
+    var actual = sel.value;
+    var etiquetas = todasLasEtiquetas();
+    sel.innerHTML = '<option value="">Todas las etiquetas</option>' +
+      etiquetas.map(function(e){ return '<option value="' + escaparHtml(e) + '">' + escaparHtml(e) + '</option>'; }).join("");
+    if(etiquetas.indexOf(actual) !== -1) sel.value = actual;
+  }
+
+  function renderListaRecetas(){
+    var texto = normalizarParaComparar(elem("in-buscar-receta").value);
+    var etiquetaFiltro = elem("sel-filtro-etiqueta").value;
+
+    var recetas = listarRecetasActivas().filter(function(r){
+      if(soloFavoritasActivo && !r.favorita) return false;
+      if(etiquetaFiltro && (r.etiquetas || []).indexOf(etiquetaFiltro) === -1) return false;
+      if(texto){
+        var campo = normalizarParaComparar(r.titulo) + " " +
+          normalizarParaComparar((r.etiquetas || []).join(" ")) + " " +
+          normalizarParaComparar(r.descripcion);
+        if(campo.indexOf(texto) === -1) return false;
+      }
+      return true;
+    });
+
+    recetas.sort(function(a, b){ return (a.titulo || "").localeCompare(b.titulo || "", "es"); });
+
+    var cont = elem("lista-recetas");
+    if(recetas.length === 0){
+      cont.innerHTML = '<div class="vacio"><div class="icono">🍲</div><p>No hay recetas que coincidan.</p></div>';
+      return;
+    }
+
+    cont.innerHTML = recetas.map(function(r){
+      var tiempoTotal = (r.tiempo_prep || 0) + (r.tiempo_coccion || 0);
+      var meta = [];
+      if(tiempoTotal) meta.push(tiempoTotal + " min");
+      if(r.dificultad) meta.push(capitalizar(r.dificultad));
+      if(r.veces_cocinada) meta.push("cocinada " + r.veces_cocinada + (r.veces_cocinada === 1 ? " vez" : " veces"));
+      var etiquetasHtml = (r.etiquetas || []).map(function(e){ return '<span class="etiqueta">' + escaparHtml(e) + '</span>'; }).join("");
+      return '' +
+        '<div class="tarjeta-receta" data-id="' + escaparHtml(r.id) + '">' +
+          '<div class="cuerpo">' +
+            '<h3>' + escaparHtml(r.titulo) + '</h3>' +
+            '<div class="meta">' + escaparHtml(meta.join(" · ")) + '</div>' +
+            (etiquetasHtml ? '<div class="etiquetas">' + etiquetasHtml + '</div>' : "") +
+          '</div>' +
+          '<button class="btn-favorita' + (r.favorita ? " activa" : "") + '" type="button" data-id="' + escaparHtml(r.id) + '" data-accion="favorita">' +
+            (r.favorita ? "★" : "☆") +
+          '</button>' +
+        '</div>';
+    }).join("");
+  }
+
+  elem("in-buscar-receta").addEventListener("input", renderListaRecetas);
+  elem("sel-filtro-etiqueta").addEventListener("change", renderListaRecetas);
+  elem("btn-filtro-favoritas").addEventListener("click", function(){
+    soloFavoritasActivo = !soloFavoritasActivo;
+    this.classList.toggle("activo", soloFavoritasActivo);
+    renderListaRecetas();
+  });
+
+  elem("lista-recetas").addEventListener("click", function(ev){
+    var favBtn = ev.target.closest(".btn-favorita");
+    if(favBtn){
+      ev.stopPropagation();
+      var r = obtenerReceta(favBtn.dataset.id);
+      if(r){
+        upsertLocal("recetas", "id", Object.assign({}, r, { favorita: !r.favorita }));
+        renderListaRecetas();
+        sincronizarTodo();
+      }
+      return;
+    }
+    var card = ev.target.closest(".tarjeta-receta");
+    if(card) abrirDetalleReceta(card.dataset.id);
+  });
+
+  elem("btn-nueva-receta").addEventListener("click", function(){ abrirFormularioReceta(null); });
+
+  // ------------------------------------------------------------
+  // Recetas — detalle / vista de cocina
+  // ------------------------------------------------------------
+  function formatearReloj(segundos){
+    segundos = Math.max(0, Math.round(segundos));
+    var m = Math.floor(segundos / 60);
+    var s = segundos % 60;
+    return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  function pararTodosTemporizadores(){
+    Object.keys(temporizadores).forEach(function(idx){
+      if(temporizadores[idx].intervalo) clearInterval(temporizadores[idx].intervalo);
+    });
+    temporizadores = {};
+  }
+
+  function iniciarTemporizador(idx, segundosTotales){
+    if(temporizadores[idx] && temporizadores[idx].intervalo) return;
+    var estado = temporizadores[idx] || { restante: segundosTotales, estado: "parado" };
+    if(estado.estado === "terminado") estado = { restante: segundosTotales, estado: "parado" };
+    estado.estado = "activo";
+    var cont = elem("temporizador-" + idx);
+    if(cont) cont.classList.add("activo");
+    estado.intervalo = setInterval(function(){
+      estado.restante -= 1;
+      var reloj = elem("reloj-" + idx);
+      if(reloj) reloj.textContent = formatearReloj(estado.restante);
+      if(estado.restante <= 0){
+        clearInterval(estado.intervalo);
+        estado.intervalo = null;
+        estado.estado = "terminado";
+        if(cont){ cont.classList.remove("activo"); cont.classList.add("terminado"); }
+        if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      }
+    }, 1000);
+    temporizadores[idx] = estado;
+  }
+
+  function reiniciarTemporizador(idx, segundosTotales){
+    if(temporizadores[idx] && temporizadores[idx].intervalo) clearInterval(temporizadores[idx].intervalo);
+    temporizadores[idx] = { restante: segundosTotales, estado: "parado", intervalo: null };
+    var cont = elem("temporizador-" + idx);
+    if(cont){ cont.classList.remove("activo"); cont.classList.remove("terminado"); }
+    var reloj = elem("reloj-" + idx);
+    if(reloj) reloj.textContent = formatearReloj(segundosTotales);
+  }
+
+  function abrirDetalleReceta(id){
+    var r = obtenerReceta(id);
+    if(!r) return;
+    vistaRecetaActual = id;
+    racionesVista = r.raciones_base || 4;
+    pararTodosTemporizadores();
+    renderDetalleReceta();
+    mostrarSubvistaRecetas("detalle");
+  }
+
+  function renderDetalleReceta(){
+    var r = obtenerReceta(vistaRecetaActual);
+    if(!r){ mostrarSubvistaRecetas("lista"); renderListaRecetas(); return; }
+
+    elem("detalle-titulo").textContent = r.titulo;
+    elem("detalle-descripcion").textContent = r.descripcion || "";
+    elem("detalle-descripcion").style.display = r.descripcion ? "block" : "none";
+
+    var metaPartes = [];
+    if(r.tiempo_prep) metaPartes.push("Prep " + r.tiempo_prep + " min");
+    if(r.tiempo_coccion) metaPartes.push("Cocción " + r.tiempo_coccion + " min");
+    if(r.dificultad) metaPartes.push(capitalizar(r.dificultad));
+    elem("detalle-meta").textContent = metaPartes.join(" · ");
+
+    var favBtn = elem("detalle-favorita");
+    favBtn.classList.toggle("activa", !!r.favorita);
+    favBtn.textContent = r.favorita ? "★" : "☆";
+
+    elem("detalle-raciones-num").textContent = racionesVista;
+
+    var factor = racionesVista / (r.raciones_base || 1);
+    renderIngredientesDetalle(r, factor);
+    renderPasosDetalle(r, factor);
+
+    if(r.notas){
+      elem("detalle-notas-tarjeta").style.display = "block";
+      elem("detalle-notas").textContent = r.notas;
+    }else{
+      elem("detalle-notas-tarjeta").style.display = "none";
+    }
+  }
+
+  function renderIngredientesDetalle(r, factor){
+    var lineas = r.ingredientes || [];
+    if(lineas.length === 0){
+      elem("detalle-ingredientes").innerHTML =
+        '<p style="color:var(--texto-sec);font-size:.9rem;">Sin ingredientes todavía. Impórtalos desde Ajustes → Importar recetas.</p>';
+      return;
+    }
+    var grupoActual;
+    var html = "";
+    lineas.forEach(function(linea){
+      if(linea.grupo !== grupoActual){
+        grupoActual = linea.grupo;
+        if(grupoActual) html += '<div class="grupo-titulo">' + escaparHtml(grupoActual) + '</div>';
+      }
+      var escalada = escalarLineaIngrediente(linea, factor);
+      var canon = ingredientePorId(linea.ing_id);
+      var chip = "";
+      if(canon && canon.es_basico){
+        var sinExistencias = canon.hay_en_casa === false;
+        chip = '<button type="button" class="chip-basico ' + (sinExistencias ? "sin-existencias" : "en-casa") +
+          '" data-ing-id="' + escaparHtml(canon.id) + '">' + (sinExistencias ? "Sin existencias" : "En casa") + '</button>';
+      }
+      html += '<div class="linea-ingrediente">' +
+        '<div class="texto">' + escaparHtml(escalada.textoEscalado) +
+          (linea.opcional ? ' <span class="opcional-tag">(opcional)</span>' : "") +
+        '</div>' + chip +
+        '</div>';
+    });
+    elem("detalle-ingredientes").innerHTML = html;
+  }
+
+  function renderPasosDetalle(r, factor){
+    var lineasPorId = {};
+    (r.ingredientes || []).forEach(function(l){ lineasPorId[l.id] = l; });
+    var pasos = (r.pasos || []).slice().sort(function(a, b){ return (a.orden || 0) - (b.orden || 0); });
+    if(pasos.length === 0){
+      elem("detalle-pasos").innerHTML = '<p style="color:var(--texto-sec);font-size:.9rem;">Sin pasos todavía.</p>';
+      return;
+    }
+    var html = pasos.map(function(paso, idx){
+      var texto = escalarPasoTexto(paso.texto, lineasPorId, factor);
+      var tituloHtml = paso.titulo ? "<h4>" + escaparHtml(paso.titulo) + "</h4>" : "";
+      var timerHtml = "";
+      if(paso.tiempo_s){
+        timerHtml = '<div class="temporizador" id="temporizador-' + idx + '" data-segundos="' + paso.tiempo_s + '">' +
+          '<span class="reloj" id="reloj-' + idx + '">' + formatearReloj(paso.tiempo_s) + '</span>' +
+          '<button type="button" data-accion="iniciar-temporizador" data-idx="' + idx + '">Iniciar</button>' +
+          '<button type="button" data-accion="reiniciar-temporizador" data-idx="' + idx + '">Reiniciar</button>' +
+        '</div>';
+      }
+      return '<div class="paso">' +
+        '<div class="num">Paso ' + (idx + 1) + '</div>' +
+        tituloHtml +
+        '<p>' + escaparHtml(texto) + '</p>' +
+        timerHtml +
+        '</div>';
+    }).join("");
+    elem("detalle-pasos").innerHTML = html;
+  }
+
+  elem("detalle-ingredientes").addEventListener("click", function(ev){
+    var chip = ev.target.closest(".chip-basico");
+    if(!chip) return;
+    var canon = ingredientePorId(chip.dataset.ingId);
+    if(!canon) return;
+    var sinExistencias = canon.hay_en_casa === false;
+    upsertLocal("ingredientes", "id", Object.assign({}, canon, { hay_en_casa: sinExistencias }));
+    var r = obtenerReceta(vistaRecetaActual);
+    if(r) renderIngredientesDetalle(r, racionesVista / (r.raciones_base || 1));
+    sincronizarTodo();
+  });
+
+  elem("detalle-pasos").addEventListener("click", function(ev){
+    var btn = ev.target.closest("button[data-accion]");
+    if(!btn) return;
+    var idx = btn.dataset.idx;
+    var cont = elem("temporizador-" + idx);
+    if(!cont) return;
+    var segundosTotales = parseInt(cont.dataset.segundos, 10);
+    if(btn.dataset.accion === "iniciar-temporizador") iniciarTemporizador(idx, segundosTotales);
+    else if(btn.dataset.accion === "reiniciar-temporizador") reiniciarTemporizador(idx, segundosTotales);
+  });
+
+  elem("btn-raciones-menos").addEventListener("click", function(){
+    if(racionesVista > 1){ racionesVista--; renderDetalleReceta(); }
+  });
+  elem("btn-raciones-mas").addEventListener("click", function(){
+    racionesVista++; renderDetalleReceta();
+  });
+
+  elem("detalle-favorita").addEventListener("click", function(){
+    var r = obtenerReceta(vistaRecetaActual);
+    if(!r) return;
+    upsertLocal("recetas", "id", Object.assign({}, r, { favorita: !r.favorita }));
+    renderDetalleReceta();
+    sincronizarTodo();
+  });
+
+  elem("btn-cocinada-hoy").addEventListener("click", function(){
+    var r = obtenerReceta(vistaRecetaActual);
+    if(!r) return;
+    var nuevasVeces = (r.veces_cocinada || 0) + 1;
+    upsertLocal("recetas", "id", Object.assign({}, r, { veces_cocinada: nuevasVeces, ultima_vez: hoyISO() }));
+    renderDetalleReceta();
+    sincronizarTodo();
+    mostrarMensaje("msg-detalle", "¡Anotado! Vas " + nuevasVeces + (nuevasVeces === 1 ? " vez." : " veces."), "ok");
+  });
+
+  elem("btn-volver-detalle").addEventListener("click", function(){
+    pararTodosTemporizadores();
+    mostrarSubvistaRecetas("lista");
+    renderListaRecetas();
+  });
+
+  elem("btn-editar-receta").addEventListener("click", function(){
+    abrirFormularioReceta(vistaRecetaActual);
+  });
+
+  // ------------------------------------------------------------
+  // Recetas — alta / edición (metadatos + ingredientes + pasos)
+  // ------------------------------------------------------------
+  var formIngredientesState = [];
+  var formPasosState = [];
+
+  function clonar(x){ return JSON.parse(JSON.stringify(x)); }
+
+  function siguienteIdLinea(){
+    var max = 0;
+    formIngredientesState.forEach(function(f){
+      var n = parseInt(f.id, 10);
+      if(!isNaN(n) && n > max) max = n;
+    });
+    var siguiente = String(max + 1);
+    while(siguiente.length < 4) siguiente = "0" + siguiente;
+    return siguiente;
+  }
+
+  function abrirFormularioReceta(id){
+    editandoRecetaId = id;
+    var r = id ? obtenerReceta(id) : null;
+    elem("form-titulo-tarjeta").textContent = r ? "Editar receta" : "Nueva receta";
+    elem("f-titulo").value = r ? (r.titulo || "") : "";
+    elem("f-descripcion").value = r ? (r.descripcion || "") : "";
+    elem("f-raciones-base").value = r ? (r.raciones_base || 4) : 4;
+    elem("f-tiempo-prep").value = r && r.tiempo_prep ? r.tiempo_prep : "";
+    elem("f-tiempo-coccion").value = r && r.tiempo_coccion ? r.tiempo_coccion : "";
+    elem("f-dificultad").value = r ? (r.dificultad || "") : "";
+    elem("f-etiquetas").value = r ? (r.etiquetas || []).join(", ") : "";
+    elem("f-notas").value = r ? (r.notas || "") : "";
+    elem("f-favorita").checked = r ? !!r.favorita : false;
+
+    formIngredientesState = r ? clonar(r.ingredientes || []) : [];
+    formPasosState = r ? clonar(r.pasos || []) : [];
+    renderFormIngredientes();
+    renderFormPasos();
+
+    mostrarMensaje("msg-form-receta", "", "");
+    mostrarSubvistaRecetas("form");
+  }
+
+  elem("btn-volver-form").addEventListener("click", function(){
+    if(editandoRecetaId){ renderDetalleReceta(); mostrarSubvistaRecetas("detalle"); }
+    else{ renderListaRecetas(); mostrarSubvistaRecetas("lista"); }
+  });
+
+  // -- Ingredientes: filas editables --------------------------------
+
+  function opcionesIngredientesHtml(seleccionId){
+    var lista = getTabla("ingredientes").filter(function(i){ return !i.borrada; })
+      .slice().sort(function(a, b){ return (a.nombre || "").localeCompare(b.nombre || "", "es"); });
+    var html = '<option value="">— Selecciona un ingrediente —</option>';
+    html += lista.map(function(i){
+      return '<option value="' + escaparHtml(i.id) + '"' + (i.id === seleccionId ? " selected" : "") + '>' +
+        escaparHtml(i.nombre) + '</option>';
+    }).join("");
+    return html;
+  }
+
+  function opcionesUnidadHtml(ingCanon, seleccionUnidad){
+    if(!ingCanon) return '<option value="">—</option>';
+    var html = '<option value="">—</option>';
+    html += opcionesUnidadPara(ingCanon).map(function(u){
+      var etiqueta = u === ingCanon.unidad_base ? (u + " (base)") : u;
+      return '<option value="' + escaparHtml(u) + '"' + (u === seleccionUnidad ? " selected" : "") + '>' +
+        escaparHtml(etiqueta) + '</option>';
+    }).join("");
+    return html;
+  }
+
+  function textoMedida(fila){
+    if(!fila.ing_id) return "";
+    if(fila.medidaError) return '<div class="aviso-medida error">' + escaparHtml(fila.medidaError) + '</div>';
+    if(fila.med_cantidad != null && fila.med_unidad){
+      return '<div class="aviso-medida ok">= ' + formatearNumero(fila.med_cantidad) + ' ' + escaparHtml(fila.med_unidad) + '</div>';
+    }
+    return "";
+  }
+
+  function htmlFilaIngrediente(fila, idx){
+    var ingCanon = ingredientePorId(fila.ing_id);
+    return '' +
+      '<div class="fila-editable" data-idx="' + idx + '">' +
+        '<select data-campo="ing_id" data-idx="' + idx + '">' + opcionesIngredientesHtml(fila.ing_id) + '</select>' +
+        '<input type="text" data-campo="texto" data-idx="' + idx + '" placeholder="Texto (p. ej. 4 dientes de ajo picados)" value="' + escaparHtml(fila.texto || "") + '">' +
+        '<div class="fila-editable-linea">' +
+          '<input type="number" step="any" data-campo="cantidad" data-idx="' + idx + '" placeholder="Cantidad" value="' + (fila.cantidad != null ? fila.cantidad : "") + '">' +
+          '<select data-campo="unidad" data-idx="' + idx + '">' + opcionesUnidadHtml(ingCanon, fila.unidad) + '</select>' +
+        '</div>' +
+        '<div class="aviso-medida-cont">' + textoMedida(fila) + '</div>' +
+        '<div class="fila-editable-pie">' +
+          '<label class="fila-check-inline"><input type="checkbox" data-campo="opcional" data-idx="' + idx + '"' + (fila.opcional ? " checked" : "") + '> Opcional</label>' +
+          '<button type="button" class="btn-eliminar-fila" data-accion="eliminar-ingrediente" data-idx="' + idx + '">Eliminar</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function renderFormIngredientes(){
+    elem("form-ingredientes-lista").innerHTML =
+      formIngredientesState.map(htmlFilaIngrediente).join("") ||
+      '<p style="color:var(--texto-sec);font-size:.9rem;">Sin ingredientes todavía.</p>';
+  }
+
+  function renderizarFilaIngrediente(idx){
+    var fila = formIngredientesState[idx];
+    var filaEl = document.querySelector('#form-ingredientes-lista .fila-editable[data-idx="' + idx + '"]');
+    if(!fila || !filaEl) return;
+    filaEl.outerHTML = htmlFilaIngrediente(fila, idx);
+  }
+
+  function actualizarMedidaEnDom(idx, fila){
+    var filaEl = document.querySelector('#form-ingredientes-lista .fila-editable[data-idx="' + idx + '"]');
+    if(!filaEl) return;
+    var cont = filaEl.querySelector(".aviso-medida-cont");
+    if(cont) cont.innerHTML = textoMedida(fila);
+  }
+
+  function recomputarMedida(fila){
+    var ingCanon = ingredientePorId(fila.ing_id);
+    if(!ingCanon || !fila.unidad || fila.cantidad == null || isNaN(fila.cantidad)){
+      fila.med_cantidad = null;
+      fila.med_unidad = null;
+      fila.medidaError = null;
+      return;
+    }
+    var resultado = calcularMedida(ingCanon, fila.cantidad, fila.unidad);
+    if(resultado.ok){
+      fila.med_cantidad = resultado.med_cantidad;
+      fila.med_unidad = resultado.med_unidad;
+      fila.medidaError = null;
+    }else{
+      fila.med_cantidad = null;
+      fila.med_unidad = null;
+      fila.medidaError = resultado.motivo;
+    }
+  }
+
+  function manejarCambioIngredienteForm(target){
+    if(!target || !target.dataset || target.dataset.idx === undefined) return;
+    var idx = parseInt(target.dataset.idx, 10);
+    var campo = target.dataset.campo;
+    var fila = formIngredientesState[idx];
+    if(!campo || !fila) return;
+
+    if(campo === "texto"){ fila.texto = target.value; return; }
+    if(campo === "opcional"){ fila.opcional = target.checked; return; }
+
+    if(campo === "ing_id"){
+      fila.ing_id = target.value || null;
+      fila.unidad = null; // fuerza a reelegir la unidad para el ingrediente nuevo
+      recomputarMedida(fila);
+      renderizarFilaIngrediente(idx);
+      return;
+    }
+
+    if(campo === "cantidad"){
+      fila.cantidad = target.value === "" ? null : parseFloat(target.value);
+      recomputarMedida(fila);
+      actualizarMedidaEnDom(idx, fila);
+      return;
+    }
+
+    if(campo === "unidad"){
+      fila.unidad = target.value || null;
+      recomputarMedida(fila);
+      actualizarMedidaEnDom(idx, fila);
+      return;
+    }
+  }
+
+  elem("form-ingredientes-lista").addEventListener("input", function(ev){ manejarCambioIngredienteForm(ev.target); });
+  elem("form-ingredientes-lista").addEventListener("change", function(ev){ manejarCambioIngredienteForm(ev.target); });
+  elem("form-ingredientes-lista").addEventListener("click", function(ev){
+    var btn = ev.target.closest("[data-accion='eliminar-ingrediente']");
+    if(!btn) return;
+    formIngredientesState.splice(parseInt(btn.dataset.idx, 10), 1);
+    renderFormIngredientes();
+  });
+
+  elem("btn-anadir-ingrediente").addEventListener("click", function(){
+    formIngredientesState.push({
+      id: siguienteIdLinea(), texto: "", cantidad: null, unidad: null, ing_id: null,
+      med_cantidad: null, med_unidad: null, opcional: false, grupo: null, medidaError: null
+    });
+    renderFormIngredientes();
+  });
+
+  // -- Pasos: filas editables ----------------------------------------
+
+  function htmlFilaPaso(paso, idx){
+    return '' +
+      '<div class="fila-editable" data-idx="' + idx + '">' +
+        '<div class="fila-editable-linea">' +
+          '<input type="number" data-campo="orden" data-idx="' + idx + '" placeholder="Orden" value="' + (paso.orden != null ? paso.orden : "") + '" style="flex:0 0 70px;">' +
+          '<input type="number" data-campo="tiempo_s" data-idx="' + idx + '" placeholder="Segundos (opcional)" value="' + (paso.tiempo_s != null ? paso.tiempo_s : "") + '">' +
+        '</div>' +
+        '<input type="text" data-campo="titulo" data-idx="' + idx + '" placeholder="Título (opcional)" value="' + escaparHtml(paso.titulo || "") + '">' +
+        '<textarea data-campo="texto" data-idx="' + idx + '" rows="2" placeholder="Texto del paso">' + escaparHtml(paso.texto || "") + '</textarea>' +
+        '<div class="fila-editable-pie">' +
+          '<span></span>' +
+          '<button type="button" class="btn-eliminar-fila" data-accion="eliminar-paso" data-idx="' + idx + '">Eliminar</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function renderFormPasos(){
+    elem("form-pasos-lista").innerHTML =
+      formPasosState.map(htmlFilaPaso).join("") ||
+      '<p style="color:var(--texto-sec);font-size:.9rem;">Sin pasos todavía.</p>';
+  }
+
+  function manejarCambioPasoForm(target){
+    if(!target || !target.dataset || target.dataset.idx === undefined) return;
+    var idx = parseInt(target.dataset.idx, 10);
+    var campo = target.dataset.campo;
+    var paso = formPasosState[idx];
+    if(!campo || !paso) return;
+
+    if(campo === "orden") paso.orden = target.value === "" ? null : parseInt(target.value, 10);
+    else if(campo === "tiempo_s") paso.tiempo_s = target.value === "" ? null : parseInt(target.value, 10);
+    else if(campo === "titulo") paso.titulo = target.value;
+    else if(campo === "texto") paso.texto = target.value;
+  }
+
+  elem("form-pasos-lista").addEventListener("input", function(ev){ manejarCambioPasoForm(ev.target); });
+  elem("form-pasos-lista").addEventListener("change", function(ev){ manejarCambioPasoForm(ev.target); });
+  elem("form-pasos-lista").addEventListener("click", function(ev){
+    var btn = ev.target.closest("[data-accion='eliminar-paso']");
+    if(!btn) return;
+    formPasosState.splice(parseInt(btn.dataset.idx, 10), 1);
+    renderFormPasos();
+  });
+
+  elem("btn-anadir-paso").addEventListener("click", function(){
+    var maxOrden = 0;
+    formPasosState.forEach(function(p){ if(p.orden && p.orden > maxOrden) maxOrden = p.orden; });
+    formPasosState.push({ orden: maxOrden + 1, titulo: "", texto: "", tiempo_s: null, ingredientes_ref: [] });
+    renderFormPasos();
+  });
+
+  // -- Guardar ---------------------------------------------------------
+
+  elem("btn-guardar-receta").addEventListener("click", function(){
+    var titulo = elem("f-titulo").value.trim();
+    if(!titulo){
+      mostrarMensaje("msg-form-receta", "El título es obligatorio.", "error");
+      return;
+    }
+
+    var resIng = validarLineasIngredientesForm(formIngredientesState, getTabla("ingredientes"));
+    var resPasos = validarPasosForm(formPasosState);
+    var erroresTotales = resIng.errores.concat(resPasos.errores);
+    if(erroresTotales.length){
+      mostrarMensaje("msg-form-receta", erroresTotales.join(" "), "error");
+      return;
+    }
+
+    var existente = editandoRecetaId ? obtenerReceta(editandoRecetaId) : null;
+    var etiquetas = elem("f-etiquetas").value.split(",")
+      .map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+
+    var datos = {
+      id: existente ? existente.id : generarId(),
+      titulo: titulo,
+      descripcion: elem("f-descripcion").value.trim(),
+      raciones_base: parseInt(elem("f-raciones-base").value, 10) || 4,
+      tiempo_prep: elem("f-tiempo-prep").value ? parseInt(elem("f-tiempo-prep").value, 10) : null,
+      tiempo_coccion: elem("f-tiempo-coccion").value ? parseInt(elem("f-tiempo-coccion").value, 10) : null,
+      dificultad: elem("f-dificultad").value || null,
+      etiquetas: etiquetas,
+      fuente: existente ? existente.fuente : { tipo: "chat" },
+      ingredientes: resIng.lineas,
+      pasos: resPasos.pasos,
+      notas: elem("f-notas").value.trim(),
+      favorita: elem("f-favorita").checked,
+      veces_cocinada: existente ? (existente.veces_cocinada || 0) : 0,
+      ultima_vez: existente ? existente.ultima_vez : null,
+      created_at: existente ? existente.created_at : new Date().toISOString(),
+      borrada: false
+    };
+    upsertLocal("recetas", "id", datos);
+    poblarSelectEtiquetas();
+    sincronizarTodo();
+
+    if(editandoRecetaId){
+      vistaRecetaActual = datos.id;
+      renderDetalleReceta();
+      mostrarSubvistaRecetas("detalle");
+    }else{
+      renderListaRecetas();
+      mostrarSubvistaRecetas("lista");
+    }
+  });
+
+  function refrescarUIRecetasTrasSync(){
+    poblarSelectEtiquetas();
+    if(elem("vista-recetas-lista").style.display !== "none") renderListaRecetas();
+  }
 
   // ------------------------------------------------------------
   // Interfaz — Ajustes: conexión
@@ -710,11 +1922,190 @@
   }
 
   // ------------------------------------------------------------
+  // Receta de demostración (fase 2)
+  // ------------------------------------------------------------
+  // Es ficticia a propósito: sirve para probar el circuito de
+  // importación y la vista de cocina, no para cocinar. Las recetas
+  // reales entran por importación (bloque JSON generado en el chat),
+  // nunca hardcodeadas aquí. Usa solo ingredientes ya sembrados en
+  // supabase.sql (ajo, sal) para no depender de ingredientes_nuevos.
+  //
+  // Formato idéntico al de un bloque pegado desde el chat (sección 7
+  // de la especificación): así el botón "Cargar receta de ejemplo"
+  // ejercita el mismo camino de validación e importación que usará
+  // cualquier receta futura, en lugar de escribir directamente en
+  // localStorage por un atajo aparte.
+  var SEMILLA_DEMO = {
+    version: 1,
+    ingredientes_nuevos: [],
+    recetas: [
+      {
+        titulo: "Receta de ejemplo (demo, no es una receta real)",
+        descripcion: "Receta ficticia para probar la importación y la vista de cocina. Bórrala o edítala libremente.",
+        raciones_base: 2,
+        tiempo_prep: null,
+        tiempo_coccion: null,
+        dificultad: null,
+        etiquetas: ["demo"],
+        fuente: { tipo: "chat" },
+        ingredientes: [
+          { id: "0001", texto: "2 dientes de ajo picados", cantidad: 2, unidad: null, ing_id: "ajo", med_cantidad: 8, med_unidad: "g", opcional: false, grupo: null },
+          { id: "0002", texto: "1 cucharadita de sal", cantidad: 1, unidad: "tsp", ing_id: "sal", med_cantidad: 6, med_unidad: "g", opcional: false, grupo: null }
+        ],
+        pasos: [
+          { orden: 1, titulo: null, texto: "Mezcla {0001} con {0002}. Esto es solo una receta de demostración, no la cocines de verdad.", tiempo_s: 30, ingredientes_ref: ["0001", "0002"] }
+        ],
+        notas: "Receta ficticia de demostración, cargada con el botón 'Cargar receta de ejemplo'. No es una receta real: bórrala cuando ya no la necesites."
+      }
+    ]
+  };
+
+  // ------------------------------------------------------------
+  // Interfaz — Ajustes: importar recetas
+  // ------------------------------------------------------------
+  var importacionPendiente = null;
+
+  elem("in-importar-archivo").addEventListener("change", function(ev){
+    var archivo = ev.target.files[0];
+    if(!archivo) return;
+    var lector = new FileReader();
+    lector.onload = function(){ elem("in-importar-json").value = lector.result; };
+    lector.readAsText(archivo);
+  });
+
+  elem("btn-cargar-semilla").addEventListener("click", function(){
+    elem("in-importar-json").value = JSON.stringify(SEMILLA_DEMO, null, 2);
+    mostrarMensaje("msg-importacion", "", "");
+    elem("previa-importacion").innerHTML = "";
+    elem("btn-confirmar-importacion").style.display = "none";
+    importacionPendiente = null;
+  });
+
+  elem("btn-previsualizar-importacion").addEventListener("click", function(){
+    var texto = elem("in-importar-json").value.trim();
+    if(!texto){
+      mostrarMensaje("msg-importacion", "Pega o sube un bloque JSON primero.", "error");
+      return;
+    }
+    var payload;
+    try{
+      payload = JSON.parse(texto);
+    }catch(e){
+      mostrarMensaje("msg-importacion", "JSON inválido: " + e.message, "error");
+      elem("previa-importacion").innerHTML = "";
+      elem("btn-confirmar-importacion").style.display = "none";
+      importacionPendiente = null;
+      return;
+    }
+
+    var resultado = validarImportacion(payload, getTabla("ingredientes"));
+    importacionPendiente = resultado.ok ? resultado : null;
+    mostrarMensaje("msg-importacion", "", "");
+
+    var html = "";
+    if(resultado.errores.length){
+      html += "<h4>Errores</h4><ul>" +
+        resultado.errores.map(function(e){ return '<li class="error">' + escaparHtml(e) + '</li>'; }).join("") +
+        "</ul>";
+    }
+    if(resultado.avisos.length){
+      html += "<h4>Avisos</h4><ul>" +
+        resultado.avisos.map(function(a){ return '<li class="aviso">' + escaparHtml(a) + '</li>'; }).join("") +
+        "</ul>";
+    }
+    html += "<h4>Ingredientes nuevos (" + resultado.ingredientesNuevos.length + ")</h4><ul>" +
+      (resultado.ingredientesNuevos.map(function(i){ return "<li>" + escaparHtml(i.nombre) + " (" + escaparHtml(i.id) + ")</li>"; }).join("") ||
+        "<li>Ninguno</li>") +
+      "</ul>";
+    html += "<h4>Recetas (" + resultado.recetas.length + ")</h4><ul>" +
+      (resultado.recetas.map(function(r){ return "<li>" + escaparHtml(r.titulo || "(sin título)") + "</li>"; }).join("") ||
+        "<li>Ninguna</li>") +
+      "</ul>";
+
+    elem("previa-importacion").innerHTML = '<div class="previa-importacion">' + html + '</div>';
+    elem("btn-confirmar-importacion").style.display = resultado.ok ? "block" : "none";
+  });
+
+  elem("btn-confirmar-importacion").addEventListener("click", function(){
+    if(!importacionPendiente) return;
+
+    importacionPendiente.ingredientesNuevos.forEach(function(ing){
+      upsertLocal("ingredientes", "id", {
+        id: ing.id,
+        nombre: ing.nombre,
+        seccion: ing.seccion,
+        es_basico: !!ing.es_basico,
+        hay_en_casa: ing.hay_en_casa !== undefined ? !!ing.hay_en_casa : true,
+        del_huerto: !!ing.del_huerto,
+        meses: ing.meses || null,
+        unidad_base: ing.unidad_base,
+        unidad_compra: ing.unidad_compra,
+        compra_min: ing.compra_min != null ? ing.compra_min : null,
+        equivalencias: ing.equivalencias || {},
+        alias: ing.alias || [],
+        borrada: false
+      });
+    });
+
+    importacionPendiente.recetas.forEach(function(receta){
+      var existente = receta.id ? obtenerReceta(receta.id) : null;
+      upsertLocal("recetas", "id", {
+        id: existente ? existente.id : (receta.id || generarId()),
+        titulo: receta.titulo,
+        descripcion: receta.descripcion || "",
+        raciones_base: receta.raciones_base || 4,
+        tiempo_prep: receta.tiempo_prep || null,
+        tiempo_coccion: receta.tiempo_coccion || null,
+        dificultad: receta.dificultad || null,
+        etiquetas: receta.etiquetas || [],
+        fuente: receta.fuente || { tipo: "chat" },
+        ingredientes: receta.ingredientes || [],
+        pasos: receta.pasos || [],
+        notas: receta.notas || "",
+        favorita: existente ? existente.favorita : false,
+        veces_cocinada: existente ? existente.veces_cocinada : 0,
+        ultima_vez: existente ? existente.ultima_vez : null,
+        created_at: existente ? existente.created_at : new Date().toISOString(),
+        borrada: false
+      });
+    });
+
+    mostrarMensaje("msg-importacion",
+      "Importación guardada: " + importacionPendiente.ingredientesNuevos.length + " ingredientes nuevos, " +
+      importacionPendiente.recetas.length + " receta(s).", "ok");
+
+    elem("in-importar-json").value = "";
+    elem("previa-importacion").innerHTML = "";
+    elem("btn-confirmar-importacion").style.display = "none";
+    importacionPendiente = null;
+
+    poblarSelectEtiquetas();
+    renderListaRecetas();
+    sincronizarTodo();
+  });
+
+  // ------------------------------------------------------------
+  // Interfaz — Ajustes: exportar vocabulario
+  // ------------------------------------------------------------
+  elem("btn-exportar-vocabulario").addEventListener("click", function(){
+    var vocabulario = {};
+    getTabla("ingredientes").filter(function(i){ return !i.borrada; }).forEach(function(i){
+      vocabulario[i.id] = i.nombre;
+    });
+    var area = elem("out-vocabulario");
+    area.value = JSON.stringify(vocabulario, null, 2);
+    area.style.display = "block";
+  });
+
+  // ------------------------------------------------------------
   // Arranque
   // ------------------------------------------------------------
   cargarFormularioConexion();
   pintarSesion();
   pintarResumen();
+  poblarSelectEtiquetas();
+  renderListaRecetas();
+  mostrarSubvistaRecetas("lista");
 
   if(sesionValida()){
     sincronizarTodo();
