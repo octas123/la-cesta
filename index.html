@@ -789,18 +789,17 @@
   }
 
   // Expresa una cantidad ya redondeada a cuartos como fracción legible
-  // en cocina: 0,5 -> "1/2", 0,75 -> "3/4", 1,25 -> "1-1/4". El guion
-  // (no un espacio) evita que un número mixto se lea como dos
-  // cantidades distintas.
+  // en cocina, con el carácter unicode de fracción: 0,5 -> "½",
+  // 0,75 -> "¾", 1,25 -> "1¼". El entero y la fracción van pegados,
+  // sin espacio ni guion, como se escriben las fracciones unicode.
   function formatearFraccionCuartos(n){
-    var mapa = { 0.25: "1/4", 0.5: "1/2", 0.75: "3/4" };
+    var mapa = { 0.25: "¼", 0.5: "½", 0.75: "¾" };
     var entero = Math.floor(n + 1e-9);
     var frac = Math.round((n - entero) * 4) / 4;
     if(frac >= 1){ entero += 1; frac = 0; }
-    var partes = [];
-    if(entero > 0) partes.push(String(entero));
-    if(frac > 0) partes.push(mapa[frac]);
-    return partes.length ? partes.join("-") : "0";
+    var texto = entero > 0 ? String(entero) : "";
+    if(frac > 0) texto += mapa[frac];
+    return texto || "0";
   }
 
   var UNIDADES_CUCHARA = { tbsp: true, tsp: true };

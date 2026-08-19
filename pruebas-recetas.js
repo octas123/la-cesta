@@ -373,19 +373,19 @@ console.log("\n-- Caso 8: fracciones ASCII y unicode en el texto --");
 linea = { id: "0010", texto: "1/2 cucharadita de canela", cantidad: 0.5, unidad: "tsp" };
 escalada = escalarLineaIngrediente(linea, 1.25);
 assertIgual(escalada.cantidadEscalada, 0.625, "el valor exacto interno no se redondea: 0,5 * 1,25 = 0,625");
-assertIgual(escalada.textoEscalado, "3/4 cucharadita de canela", "la fracción ASCII se detecta, se escala y se sustituye por un solo número");
+assertIgual(escalada.textoEscalado, "¾ cucharadita de canela", "la fracción ASCII se detecta, se escala y se muestra como fracción unicode");
 assert(escalada.textoEscalado.indexOf("×") === -1, "nunca antepone el factor con ×");
 
 // La misma fracción escrita en unicode (½) se reconoce igual.
 linea = { id: "0011", texto: "½ cucharadita de canela", cantidad: 0.5, unidad: "tsp" };
 escalada = escalarLineaIngrediente(linea, 1.25);
-assertIgual(escalada.textoEscalado, "3/4 cucharadita de canela", "la fracción unicode ½ se reconoce igual que la ASCII 1/2");
+assertIgual(escalada.textoEscalado, "¾ cucharadita de canela", "la fracción unicode ½ se reconoce igual que la ASCII 1/2");
 
 // Otra fracción unicode (¼), con un factor que la deja en un número
 // entero limpio.
 linea = { id: "0012", texto: "¼ de cucharadita de pimienta", cantidad: 0.25, unidad: "tsp" };
 escalada = escalarLineaIngrediente(linea, 2);
-assertIgual(escalada.textoEscalado, "1/2 de cucharadita de pimienta", "¼ escalado por 2 dobla a 1/2, como fracción legible");
+assertIgual(escalada.textoEscalado, "½ de cucharadita de pimienta", "¼ escalado por 2 dobla a ½, como fracción unicode");
 
 // Fracción ASCII en una unidad sin regla de redondeo especial (p.ej.
 // "taza"): se detecta y escala igual, mostrada como decimal.
@@ -424,9 +424,9 @@ assertIgual(formatearCantidadMostrada(3.75, "cabeza"), "4", "cualquier otro nomb
 
 // Cucharadas/cucharaditas: a cuartos, como fracción legible. Es la
 // única familia con esta regla; todo lo demás cae en pieza contable.
-assertIgual(formatearCantidadMostrada(0.5, "tbsp"), "1/2", "0,5 cucharada se expresa como 1/2");
-assertIgual(formatearCantidadMostrada(0.75, "tsp"), "3/4", "0,75 cucharadita se expresa como 3/4");
-assertIgual(formatearCantidadMostrada(1.25, "tsp"), "1-1/4", "1,25 cucharaditas se expresa como número mixto 1-1/4, con guion");
+assertIgual(formatearCantidadMostrada(0.5, "tbsp"), "½", "0,5 cucharada se expresa como fracción unicode ½");
+assertIgual(formatearCantidadMostrada(0.75, "tsp"), "¾", "0,75 cucharadita se expresa como fracción unicode ¾");
+assertIgual(formatearCantidadMostrada(1.25, "tsp"), "1¼", "1,25 cucharaditas se expresa como número mixto unicode 1¼, sin espacio ni guion");
 
 // Gramos/mililitros: entero por encima de 10, un decimal por debajo.
 assertIgual(formatearCantidadMostrada(15, "g"), "15", "por encima de 10 g, entero");
@@ -441,11 +441,11 @@ assertIgual(escalada.cantidadEscalada, 2.5, "el valor exacto interno es 2,5, sin
 assertIgual(escalada.textoEscalado, "2,5 dientes de ajo picados", "2,5 ya es múltiplo de 0,5: se muestra tal cual");
 
 // Integración con factor 0,75: 2 cucharadas de aceite a 0,75 -> 1,5,
-// que ya es múltiplo de 0,25 y se expresa como número mixto con guion.
+// que ya es múltiplo de 0,25 y se expresa como número mixto unicode.
 linea = { id: "0016", texto: "2 cucharadas de aceite de oliva", cantidad: 2, unidad: "tbsp" };
 escalada = escalarLineaIngrediente(linea, 0.75);
 assertIgual(escalada.cantidadEscalada, 1.5, "el valor exacto interno es 1,5");
-assertIgual(escalada.textoEscalado, "1-1/2 cucharadas de aceite de oliva", "1,5 cucharadas se muestra como número mixto 1-1/2");
+assertIgual(escalada.textoEscalado, "1½ cucharadas de aceite de oliva", "1,5 cucharadas se muestra como número mixto unicode 1½");
 
 // Caso reportado: "3 dientes de ajo" con unidad "diente" (no null) y
 // factor 1,25 (5 raciones desde base 4) debe redondear a 4 dientes, no
