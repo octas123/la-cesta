@@ -124,8 +124,6 @@
     border:1px solid var(--verde);
   }
   button.boton:disabled{opacity:.5;cursor:default;}
-  button.boton.peligro{background:none;color:var(--error);border:1px solid var(--error);}
-  button.boton.peligro:active{background:var(--error);color:#fff;}
 
   .mensaje{
     margin-top:10px;
@@ -217,6 +215,11 @@
     color:#d8d5c8;flex-shrink:0;padding:2px;
   }
   .btn-favorita.activa{color:#e0a33e;}
+  .btn-eliminar-icono{
+    background:none;border:none;font-size:1.15rem;line-height:1;cursor:pointer;
+    color:var(--error);flex-shrink:0;padding:2px;opacity:.75;
+  }
+  .btn-eliminar-icono:active{opacity:1;}
 
   .fab{
     position:fixed;right:20px;bottom:88px;width:56px;height:56px;border-radius:50%;
@@ -317,7 +320,10 @@
       <div class="tarjeta">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
           <h2 id="detalle-titulo" style="margin:0;font-size:1.15rem;color:var(--texto);"></h2>
-          <button class="btn-favorita" id="detalle-favorita" type="button">★</button>
+          <div style="display:flex;gap:2px;flex-shrink:0;">
+            <button class="btn-favorita" id="detalle-favorita" type="button">★</button>
+            <button class="btn-eliminar-icono" id="btn-eliminar-receta" type="button" title="Eliminar receta" aria-label="Eliminar receta">🗑</button>
+          </div>
         </div>
         <p id="detalle-descripcion" style="color:var(--texto-sec);font-size:.9rem;margin:6px 0 0;"></p>
         <div id="detalle-meta" style="margin-top:8px;font-size:.82rem;color:var(--texto-sec);"></div>
@@ -332,7 +338,6 @@
           <button class="boton secundario" id="btn-editar-receta" type="button">Editar</button>
           <button class="boton" id="btn-cocinada-hoy" type="button">Cocinada hoy</button>
         </div>
-        <button class="boton peligro" id="btn-eliminar-receta" type="button">Eliminar receta</button>
         <div id="msg-detalle"></div>
       </div>
 
@@ -784,7 +789,9 @@
   }
 
   // Expresa una cantidad ya redondeada a cuartos como fracción legible
-  // en cocina: 0,5 -> "1/2", 0,75 -> "3/4", 1,25 -> "1 1/4".
+  // en cocina: 0,5 -> "1/2", 0,75 -> "3/4", 1,25 -> "1-1/4". El guion
+  // (no un espacio) evita que un número mixto se lea como dos
+  // cantidades distintas.
   function formatearFraccionCuartos(n){
     var mapa = { 0.25: "1/4", 0.5: "1/2", 0.75: "3/4" };
     var entero = Math.floor(n + 1e-9);
@@ -793,7 +800,7 @@
     var partes = [];
     if(entero > 0) partes.push(String(entero));
     if(frac > 0) partes.push(mapa[frac]);
-    return partes.length ? partes.join(" ") : "0";
+    return partes.length ? partes.join("-") : "0";
   }
 
   var UNIDADES_CUCHARA = { tbsp: true, tsp: true };
@@ -802,11 +809,15 @@
   // Redondeo útil para cocinar (no el valor exacto, que se conserva
   // aparte para med_cantidad y la cesta): cada familia de unidades se
   // muestra a la precisión con la que de verdad se puede medir a ojo.
-  //   - Contables (unidad null: dientes, chiles, pechugas...): al 0,5
-  //     más cercano, nunca por debajo de 0,5.
-  //   - Cucharadas/cucharaditas: a cuartos, como fracción legible.
-  //   - Gramos/mililitros: entero por encima de 10, un decimal por
-  //     debajo.
+  //   - Cucharadas/cucharaditas (tbsp/tsp): a cuartos, como fracción
+  //     legible. Es la única familia con esta regla.
+  //   - Gramos/mililitros (g/ml): entero por encima de 10, un decimal
+  //     por debajo.
+  //   - Cualquier otra unidad, incluida null: se trata como pieza
+  //     contable (diente, ud, hoja, manojo, rama, cabeza... o
+  //     cualquier otro nombre de pieza que aparezca en las
+  //     equivalencias de un ingrediente) y redondea al 0,5 más
+  //     cercano, nunca por debajo de 0,5.
   function formatearCantidadMostrada(cantidad, unidad){
     if(unidad && UNIDADES_CUCHARA[unidad]){
       return formatearFraccionCuartos(redondearAlMultiplo(cantidad, 0.25));
@@ -815,10 +826,7 @@
       var redondeado = cantidad > 10 ? Math.round(cantidad) : Math.round(cantidad * 10) / 10;
       return formatearNumero(redondeado);
     }
-    if(!unidad){
-      return formatearNumero(Math.max(0.5, redondearAlMultiplo(cantidad, 0.5)));
-    }
-    return formatearNumero(cantidad);
+    return formatearNumero(Math.max(0.5, redondearAlMultiplo(cantidad, 0.5)));
   }
 
   // Reemplaza, dentro de "texto", el número que representa

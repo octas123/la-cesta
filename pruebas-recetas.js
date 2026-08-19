@@ -405,16 +405,28 @@ assertIgual(escalada.textoEscalado, "un pellizco de sal", "sin ningún número q
 // ==============================================================
 console.log("\n-- Caso 9: redondeo útil para cocinar por familia de unidad --");
 
-// Contables (unidad null): al 0,5 más cercano.
-assertIgual(formatearCantidadMostrada(3.75, null), "4", "3,75 dientes redondea a 4");
-assertIgual(formatearCantidadMostrada(1.25, null), "1,5", "1,25 chiles redondea a 1,5");
+// Piezas contables (cualquier unidad que no sea tbsp/tsp/g/ml, incluida
+// null): al 0,5 más cercano.
+assertIgual(formatearCantidadMostrada(3.75, null), "4", "3,75 dientes (unidad null) redondea a 4");
+assertIgual(formatearCantidadMostrada(1.25, null), "1,5", "1,25 chiles (unidad null) redondea a 1,5");
 // Nunca por debajo de 0,5, aunque el resultado exacto sea menor.
 assertIgual(formatearCantidadMostrada(0.2, null), "0,5", "un contable nunca se muestra por debajo de 0,5");
 
-// Cucharadas/cucharaditas: a cuartos, como fracción legible.
+// La regla de pieza contable no depende de que la unidad sea null: se
+// aplica a cualquier nombre de pieza (diente, ud, hoja, manojo, rama,
+// cabeza...), no solo al caso sin unidad.
+assertIgual(formatearCantidadMostrada(3.75, "diente"), "4", "unidad 'diente' también redondea al 0,5, igual que null");
+assertIgual(formatearCantidadMostrada(1.25, "ud"), "1,5", "unidad 'ud' se trata como pieza contable");
+assertIgual(formatearCantidadMostrada(3.75, "hoja"), "4", "unidad 'hoja' se trata como pieza contable");
+assertIgual(formatearCantidadMostrada(3.75, "manojo"), "4", "unidad 'manojo' se trata como pieza contable");
+assertIgual(formatearCantidadMostrada(3.75, "rama"), "4", "unidad 'rama' se trata como pieza contable");
+assertIgual(formatearCantidadMostrada(3.75, "cabeza"), "4", "cualquier otro nombre de pieza (p.ej. 'cabeza') también");
+
+// Cucharadas/cucharaditas: a cuartos, como fracción legible. Es la
+// única familia con esta regla; todo lo demás cae en pieza contable.
 assertIgual(formatearCantidadMostrada(0.5, "tbsp"), "1/2", "0,5 cucharada se expresa como 1/2");
 assertIgual(formatearCantidadMostrada(0.75, "tsp"), "3/4", "0,75 cucharadita se expresa como 3/4");
-assertIgual(formatearCantidadMostrada(1.25, "tsp"), "1 1/4", "1,25 cucharaditas se expresa como número mixto 1 1/4");
+assertIgual(formatearCantidadMostrada(1.25, "tsp"), "1-1/4", "1,25 cucharaditas se expresa como número mixto 1-1/4, con guion");
 
 // Gramos/mililitros: entero por encima de 10, un decimal por debajo.
 assertIgual(formatearCantidadMostrada(15, "g"), "15", "por encima de 10 g, entero");
@@ -429,11 +441,20 @@ assertIgual(escalada.cantidadEscalada, 2.5, "el valor exacto interno es 2,5, sin
 assertIgual(escalada.textoEscalado, "2,5 dientes de ajo picados", "2,5 ya es múltiplo de 0,5: se muestra tal cual");
 
 // Integración con factor 0,75: 2 cucharadas de aceite a 0,75 -> 1,5,
-// que ya es múltiplo de 0,25 y se expresa como número mixto.
+// que ya es múltiplo de 0,25 y se expresa como número mixto con guion.
 linea = { id: "0016", texto: "2 cucharadas de aceite de oliva", cantidad: 2, unidad: "tbsp" };
 escalada = escalarLineaIngrediente(linea, 0.75);
 assertIgual(escalada.cantidadEscalada, 1.5, "el valor exacto interno es 1,5");
-assertIgual(escalada.textoEscalado, "1 1/2 cucharadas de aceite de oliva", "1,5 cucharadas se muestra como número mixto 1 1/2");
+assertIgual(escalada.textoEscalado, "1-1/2 cucharadas de aceite de oliva", "1,5 cucharadas se muestra como número mixto 1-1/2");
+
+// Caso reportado: "3 dientes de ajo" con unidad "diente" (no null) y
+// factor 1,25 (5 raciones desde base 4) debe redondear a 4 dientes, no
+// quedarse en "3,75 dientes" como pasaba cuando solo se miraba unidad
+// null.
+linea = { id: "0017", texto: "3 dientes de ajo picados", cantidad: 3, unidad: "diente" };
+escalada = escalarLineaIngrediente(linea, 1.25);
+assertIgual(escalada.cantidadEscalada, 3.75, "el valor exacto interno es 3,75, sin redondear");
+assertIgual(escalada.textoEscalado, "4 dientes de ajo picados", "unidad 'diente' redondea igual que null: 3,75 -> 4 dientes");
 
 // ------------------------------------------------------------
 console.log("\n" + (fallos === 0 ? "Todas las pruebas pasaron." : fallos + " prueba(s) fallida(s)."));
